@@ -28,7 +28,7 @@ A detailed example program is included in the source code, but in the most basic
      *
      */
 
-For more examples, check out the Documentation page.
+For more examples, check out the [Documentation] (https://github.com/theburningmonk/SimpleSpeedTester/wiki/Examples) page.
 
 ### NuGet
 
