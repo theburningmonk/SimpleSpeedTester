@@ -23,7 +23,7 @@ namespace SimlpeSpeedTester.Example
             //JsonSerializersSpeedTest.Start();
 
             // more in-depth test of BinaryFormatter vs Protobuf-net
-            //BinarySerializersSpeedTest.Start();
+            BinarySerializersSpeedTest.Start();
 
             Console.WriteLine("all done...");
             Console.ReadKey();

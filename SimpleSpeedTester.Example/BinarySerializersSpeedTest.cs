@@ -66,6 +66,13 @@ namespace SimlpeSpeedTester.Example
                 SimpleObjects,
                 SerializeWithMessageShark, 
                 DeserializeWithMessageShark<SimpleObject>);
+
+            // speed test Fluroine FX
+            DoSpeedTest(
+                "FluorineFx",
+                SimpleObjects,
+                SerializeWithFluorineFx,
+                DeserializeWithFluorineFx<SimpleObject>);
         }
 
         private static void DoSpeedTest<T>(
@@ -251,6 +258,41 @@ namespace SimlpeSpeedTester.Example
             where T : class
         {
             return byteArrays.Select(MessageSharkSerializer.Deserialize<T>).ToList();
+        }
+
+        #endregion
+
+        #region FluorineFX
+
+        private static List<byte[]> SerializeWithFluorineFx<T>(List<T> objects)
+            where T : class 
+        {
+            return objects.Select(SerializeWithFluorineFx).ToList();
+        }
+
+        private static byte[] SerializeWithFluorineFx<T>(T obj)
+        {
+            using (var memStream = new MemoryStream())
+            {
+                var writer = new FluorineFx.IO.AMFWriter(memStream);
+                writer.WriteAMF3Object(obj);
+                return memStream.ToArray();
+            }
+        }
+
+        private static List<T> DeserializeWithFluorineFx<T>(List<byte[]> byteArrays)
+            where T : class
+        {
+            return byteArrays.Select(DeserializeWithFluorineFx<T>).ToList();
+        }
+
+        private static T DeserializeWithFluorineFx<T>(byte[] byteArray)
+        {
+            using (var memStream = new MemoryStream(byteArray))
+            {
+                var reader = new FluorineFx.IO.AMFReader(memStream);
+                return (T)reader.ReadAMF3Object();
+            }
         }
 
         #endregion

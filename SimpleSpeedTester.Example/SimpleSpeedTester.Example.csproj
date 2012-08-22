@@ -35,11 +35,23 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="antlr.runtime">
+      <HintPath>..\packages\fluorinefx.1.2.3\lib\net40\antlr.runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="FluorineFx">
+      <HintPath>..\packages\fluorinefx.1.2.3\lib\net40\FluorineFx.dll</HintPath>
+    </Reference>
+    <Reference Include="FluorineFx.ServiceBrowser">
+      <HintPath>..\packages\fluorinefx.1.2.3\lib\net40\FluorineFx.ServiceBrowser.dll</HintPath>
+    </Reference>
     <Reference Include="Jayrock.Json">
       <HintPath>..\packages\jayrock-json.0.9.12915\lib\net4\Jayrock.Json.dll</HintPath>
     </Reference>
     <Reference Include="JsonFx">
       <HintPath>..\packages\JsonFx.2.0.1106.2610\lib\net40\JsonFx.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
     </Reference>
     <Reference Include="MessageShark">
       <HintPath>..\Lib\MessageShark\Release\MessageShark.dll</HintPath>
@@ -92,7 +104,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
