@@ -1,10 +1,10 @@
-# SimpleSpeedTester
+# Simple Speed Tester
 
-**SimpleSpeedTester** is a simple, easy to use framework that helps you speed test your .Net code by taking care of some of the orchestration for you.
+**Simple Speed Tester** is a simple, easy to use framework that helps you speed test your .Net code by taking care of some of the orchestration for you.
 
 It should **NOT** be confused with a performance profiler such as [JetBrains' dotTrace](http://www.jetbrains.com/profiler/) or [RedGate's ANTS profiler](http://www.red-gate.com/products/dotnet-development/ants-performance-profiler/).
 
-The **SimpleSpeedTester** is intended for one thing and one thing only – help you speed test a specific piece of code/method over multiple runs, collate the results and work out the average for you so you only have to focus on producing the code you want to test.
+The **Simple Speed Tester** is intended for one thing and one thing only – help you speed test a specific piece of code/method over multiple runs, collate the results and work out the average for you so you only have to focus on producing the code you want to test.
 
 Where it might be useful is when you want to compare the performance of two similar components/methods in terms of speed, for instance, the serialization and deserialization speed of [DataContractJsonSerializer](http://msdn.microsoft.com/en-us/library/system.runtime.serialization.json.datacontractjsonserializer.aspx) vs [JavaScriptSerializer](http://msdn.microsoft.com/en-us/library/system.web.script.serialization.javascriptserializer.aspx).
 
@@ -32,6 +32,6 @@ For more examples, check out the [Documentation] (https://github.com/theburningm
 
 ### NuGet
 
-Download and install **SimpleSpeedTester** using [NuGet](http://nuget.org/packages/SimpleSpeedTester).
+Download and install **Simple Speed Tester** using [NuGet](http://nuget.org/packages/SimpleSpeedTester).
 
 <a href="http://nuget.org/packages/SimpleSpeedTester"><img src="http://theburningmonk.com/images/sst-nuget-install.png" alt="NuGet package"/></a>
