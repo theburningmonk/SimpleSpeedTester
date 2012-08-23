@@ -38,6 +38,9 @@
     <Reference Include="antlr.runtime">
       <HintPath>..\packages\fluorinefx.1.2.3\lib\net40\antlr.runtime.dll</HintPath>
     </Reference>
+    <Reference Include="Filbert">
+      <HintPath>..\packages\Filbert.0.1.4617.2621\lib\net40\Filbert.dll</HintPath>
+    </Reference>
     <Reference Include="FluorineFx">
       <HintPath>..\packages\fluorinefx.1.2.3\lib\net40\FluorineFx.dll</HintPath>
     </Reference>

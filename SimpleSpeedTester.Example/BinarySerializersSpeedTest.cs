@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using MessageShark;
+//using MessageShark;
 using MsgPack;
 using SimpleSpeedTester.Core;
 using SimpleSpeedTester.Core.OutcomeFilters;
@@ -12,6 +12,8 @@ using SimpleSpeedTester.Interfaces;
 
 namespace SimlpeSpeedTester.Example
 {
+    using Filbert.Core;
+
     public static class BinarySerializersSpeedTest
     {
         // test serialization and deserialization on 100k objects
@@ -25,6 +27,7 @@ namespace SimlpeSpeedTester.Example
 
         // the objects to perform the tests with
         private static readonly List<SimpleObject> SimpleObjects = Enumerable.Range(1, ObjectsCount).Select(GetSimpleObject).ToList();
+        private static readonly List<Bert> BertSimpleObjects = Enumerable.Range(1, ObjectsCount).Select(GetSimpleObjectBert).ToList();
         private static readonly List<SimpleObjectWithFields> SimpleObjectsWithFields = Enumerable.Range(1, ObjectsCount).Select(GetSimpleObjectWithFields).ToList();
         private static readonly List<IserializableSimpleObject> IserializableSimpleObjects = Enumerable.Range(1, ObjectsCount).Select(GetSerializableSimpleObject).ToList();
 
@@ -61,11 +64,11 @@ namespace SimlpeSpeedTester.Example
                 lst => DeserializeWithMessagePack<SimpleObjectWithFields>(lst, false));
 
             // speed test message pack again
-            DoSpeedTest(
-                "MessageShark (with properties)",
-                SimpleObjects,
-                SerializeWithMessageShark, 
-                DeserializeWithMessageShark<SimpleObject>);
+            //DoSpeedTest(
+            //    "MessageShark (with properties)",
+            //    SimpleObjects,
+            //    SerializeWithMessageShark, 
+            //    DeserializeWithMessageShark<SimpleObject>);
 
             // speed test Fluroine FX
             DoSpeedTest(
@@ -73,6 +76,13 @@ namespace SimlpeSpeedTester.Example
                 SimpleObjects,
                 SerializeWithFluorineFx,
                 DeserializeWithFluorineFx<SimpleObject>);
+
+            // speed test Filbert
+            DoSpeedTest(
+                "Filbert",
+                BertSimpleObjects,
+                SerializeWithFilbert,
+                DeserializeWithFilbert);
         }
 
         private static void DoSpeedTest<T>(
@@ -106,6 +116,17 @@ namespace SimlpeSpeedTester.Example
             }
 
             Console.WriteLine("--------------------------------------------------------");
+        }
+
+        private static Bert GetSimpleObjectBert(int id)
+        {
+            return Bert.NewTuple(new[]
+            {
+                Bert.NewTuple(new[] { Bert.NewAtom("Name"), Bert.NewAtom("Simple") }),
+                Bert.NewTuple(new[] { Bert.NewAtom("Id"), Bert.NewInteger(100000) }),
+                Bert.NewTuple(new[] { Bert.NewAtom("Address"), Bert.NewByteList(System.Text.Encoding.ASCII.GetBytes("Planet Earth")) }),
+                Bert.NewTuple(new[] { Bert.NewAtom("Scores"), Bert.NewList(Enumerable.Range(0, 10).Select(Bert.NewInteger).ToArray()) })                
+            });
         }
 
         private static SimpleObject GetSimpleObject(int id)
@@ -248,17 +269,17 @@ namespace SimlpeSpeedTester.Example
 
         #region MessageShark
 
-        private static List<byte[]> SerializeWithMessageShark<T>(List<T> objects)
-            where T : class 
-        {
-            return objects.Select(MessageSharkSerializer.Serialize).ToList();
-        }
+        //private static List<byte[]> SerializeWithMessageShark<T>(List<T> objects)
+        //    where T : class 
+        //{
+        //    return objects.Select(MessageSharkSerializer.Serialize).ToList();
+        //}
 
-        private static List<T> DeserializeWithMessageShark<T>(List<byte[]> byteArrays)
-            where T : class
-        {
-            return byteArrays.Select(MessageSharkSerializer.Deserialize<T>).ToList();
-        }
+        //private static List<T> DeserializeWithMessageShark<T>(List<byte[]> byteArrays)
+        //    where T : class
+        //{
+        //    return byteArrays.Select(MessageSharkSerializer.Deserialize<T>).ToList();
+        //}
 
         #endregion
 
@@ -292,6 +313,37 @@ namespace SimlpeSpeedTester.Example
             {
                 var reader = new FluorineFx.IO.AMFReader(memStream);
                 return (T)reader.ReadAMF3Object();
+            }
+        }
+
+        #endregion
+
+        #region Filbert
+
+        private static List<byte[]> SerializeWithFilbert(List<Bert> objects)
+        {
+            return objects.Select(SerializeWithFilbert).ToList();
+        }
+
+        private static byte[] SerializeWithFilbert(Bert bert)
+        {
+            using (var memStream = new MemoryStream())
+            {
+                Filbert.Encoder.encode(bert, memStream);
+                return memStream.ToArray();
+            }
+        }
+
+        private static List<Bert> DeserializeWithFilbert(List<byte[]> byteArrays)
+        {
+            return byteArrays.Select(DeserializeWithFilbert).ToList();
+        }
+
+        private static Bert DeserializeWithFilbert(byte[] byteArray)
+        {
+            using (var memStream = new MemoryStream(byteArray))
+            {
+                return Filbert.Decoder.decode(memStream);
             }
         }
 
