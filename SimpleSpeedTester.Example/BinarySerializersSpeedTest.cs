@@ -4,11 +4,18 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-//using MessageShark;
+
+using MessageShark;
+
 using MsgPack;
+
 using SimpleSpeedTester.Core;
 using SimpleSpeedTester.Core.OutcomeFilters;
 using SimpleSpeedTester.Interfaces;
+
+using JsonNetBsonReader = Newtonsoft.Json.Bson.BsonReader;
+using JsonNetBsonWriter = Newtonsoft.Json.Bson.BsonWriter;
+using JsonNetJsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace SimlpeSpeedTester.Example
 {
@@ -64,11 +71,11 @@ namespace SimlpeSpeedTester.Example
                 lst => DeserializeWithMessagePack<SimpleObjectWithFields>(lst, false));
 
             // speed test message pack again
-            //DoSpeedTest(
-            //    "MessageShark (with properties)",
-            //    SimpleObjects,
-            //    SerializeWithMessageShark, 
-            //    DeserializeWithMessageShark<SimpleObject>);
+            DoSpeedTest(
+                "MessageShark (with properties)",
+                SimpleObjects,
+                SerializeWithMessageShark,
+                DeserializeWithMessageShark<SimpleObject>);
 
             // speed test Fluroine FX
             DoSpeedTest(
@@ -83,6 +90,13 @@ namespace SimlpeSpeedTester.Example
                 BertSimpleObjects,
                 SerializeWithFilbert,
                 DeserializeWithFilbert);
+
+            // speed test Json.Net BSON serializer
+            DoSpeedTest(
+                "Json.Net BSON", 
+                SimpleObjects,
+                SerializeWithJsonNetBson, 
+                DeserializeWithJsonNetBson<SimpleObject>);
         }
 
         private static void DoSpeedTest<T>(
@@ -269,17 +283,17 @@ namespace SimlpeSpeedTester.Example
 
         #region MessageShark
 
-        //private static List<byte[]> SerializeWithMessageShark<T>(List<T> objects)
-        //    where T : class 
-        //{
-        //    return objects.Select(MessageSharkSerializer.Serialize).ToList();
-        //}
+        private static List<byte[]> SerializeWithMessageShark<T>(List<T> objects)
+            where T : class
+        {
+            return objects.Select(MessageSharkSerializer.Serialize).ToList();
+        }
 
-        //private static List<T> DeserializeWithMessageShark<T>(List<byte[]> byteArrays)
-        //    where T : class
-        //{
-        //    return byteArrays.Select(MessageSharkSerializer.Deserialize<T>).ToList();
-        //}
+        private static List<T> DeserializeWithMessageShark<T>(List<byte[]> byteArrays)
+            where T : class
+        {
+            return byteArrays.Select(MessageSharkSerializer.Deserialize<T>).ToList();
+        }
 
         #endregion
 
@@ -344,6 +358,42 @@ namespace SimlpeSpeedTester.Example
             using (var memStream = new MemoryStream(byteArray))
             {
                 return Filbert.Decoder.decode(memStream);
+            }
+        }
+
+        #endregion
+
+        #region Json.Net BSON
+
+        private static List<byte[]> SerializeWithJsonNetBson<T>(List<T> objects)
+        {
+            var serializer = new JsonNetJsonSerializer();
+            return objects.Select(obj => SerializeWithJsonNetBson(obj, serializer)).ToList();
+        }
+
+        private static byte[] SerializeWithJsonNetBson<T>(T obj, JsonNetJsonSerializer serializer)
+        {
+            using (var memStream = new MemoryStream())
+            {
+                var writer = new JsonNetBsonWriter(memStream);
+                serializer.Serialize(writer, obj);
+
+                return memStream.ToArray();
+            }
+        }
+
+        private static List<T> DeserializeWithJsonNetBson<T>(List<byte[]> byteArrays)
+        {
+            var serializer = new JsonNetJsonSerializer();
+            return byteArrays.Select(arr => DeserializeWithJsonNetBson<T>(arr, serializer)).ToList();
+        }
+
+        private static T DeserializeWithJsonNetBson<T>(byte[] byteArray, JsonNetJsonSerializer serializer)
+        {
+            using (var memStream = new MemoryStream(byteArray))
+            {
+                var reader = new JsonNetBsonReader(memStream);
+                return serializer.Deserialize<T>(reader);
             }
         }
 
