@@ -20,10 +20,10 @@ namespace SimlpeSpeedTester.Example
             //Example4();
 
             // more in-depth test of JSON serializers
-            //JsonSerializersSpeedTest.Start();
+            JsonSerializersSpeedTest.Start();
 
             // more in-depth test of BinaryFormatter vs Protobuf-net
-            BinarySerializersSpeedTest.Start();
+            //BinarySerializersSpeedTest.Start();
 
             Console.WriteLine("all done...");
             Console.ReadKey();

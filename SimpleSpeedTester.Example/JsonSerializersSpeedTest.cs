@@ -7,6 +7,9 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Web.Script.Serialization;
 using System.Xaml;
+
+using MongoDB.Bson;
+
 using SimpleSpeedTester.Core;
 using SimpleSpeedTester.Core.OutcomeFilters;
 using SimpleSpeedTester.Interfaces;
@@ -71,6 +74,12 @@ namespace SimlpeSpeedTester.Example
             // speed test JsonFx
             DoSpeedTest("JsonFx", SerializeWithJsonFx, DeserializeWithJsonFx<SimpleObject>, CountAverageJsonStringPayload);
 
+            // speed test MongoDB Driver
+            DoSpeedTest("MongoDB Driver", SerializeWithMongoDbDriver, DeserializeWithMongoDbDriver<SimpleObject>, CountAverageJsonStringPayload);
+
+            // speed test MongoDB Driver
+            DoSpeedTest("MongoDB Driver BSON", SerializeWithMongoDbDriverBson, DeserializeWithMongoDbDriverBson<SimpleObject>, CountAverageByteArrayPayload);
+
             // speed test XamlServices
             //DoSpeedTest("XamlServices", SerializeWithXamlServices, DeserializeWithXamlServices<SimpleObject>);
         }
@@ -95,15 +104,16 @@ namespace SimlpeSpeedTester.Example
 
             Console.WriteLine("Test Group [{0}] average serialized byte array size is [{1}]", testGroupName, getAvgPayload(data));
 
+            var objects = new List<SimpleObject>();
             var deserializationTestSummary =
                 testGroup
-                    .Plan("Deserialization", () => deserializeFunc(data), TestRuns)
+                    .Plan("Deserialization", () => objects = deserializeFunc(data), TestRuns)
                     .GetResult()
                     .GetSummary(OutcomeFilter);
 
             Console.WriteLine(deserializationTestSummary);
 
-            Console.WriteLine("---------------------------------------------------------");
+            Console.WriteLine("---------------------------------------------------------\n\n");
         }
 
         private static SimpleObject GetSimpleObject(int id)
@@ -308,6 +318,30 @@ namespace SimlpeSpeedTester.Example
 
             var objects = jsonStrings.Select(reader.Read<T>).ToList();
             return objects;
+        }
+
+        #endregion
+
+        #region MongoDB Driver
+
+        private static List<string> SerializeWithMongoDbDriver<T>(List<T> objects)
+        {
+            return objects.Select(o => o.ToJson()).ToList();
+        }
+
+        private static List<T> DeserializeWithMongoDbDriver<T>(List<string> jsonStrings)
+        {
+            return jsonStrings.Select(MongoDB.Bson.Serialization.BsonSerializer.Deserialize<T>).ToList();
+        }
+
+        private static List<byte[]> SerializeWithMongoDbDriverBson<T>(List<T> objects)
+        {
+            return objects.Select(o => o.ToBson()).ToList();
+        }
+
+        private static List<T> DeserializeWithMongoDbDriverBson<T>(List<byte[]> byteArrays)
+        {
+            return byteArrays.Select(MongoDB.Bson.Serialization.BsonSerializer.Deserialize<T>).ToList();
         }
 
         #endregion
