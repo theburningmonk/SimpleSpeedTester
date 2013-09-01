@@ -97,6 +97,9 @@ namespace SimpleSpeedTester.Core
         /// </summary>
         internal TestOutcome Execute()
         {
+            // force a full collection before executing each test
+            GC.Collect();
+
             // initialize with null, so if no exception is caught then it stays as null
             Exception caughtException = null;
 
