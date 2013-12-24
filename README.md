@@ -12,6 +12,7 @@ Where it might be useful is when you want to compare the performance of two simi
 
 A detailed example program is included in the source code, but in the most basic case all you need is one line of code to execute a test (in the form of an Action delegate) a number of times and get back a summary including the number of successful (no exception) and failed (excepted) runs as well as the average time (in milliseconds) each test run took.
 
+```csharp
     // initialize a new test group
     var testGroup = new TestGroup("Example2");
 
@@ -27,6 +28,7 @@ A detailed example program is included in the source code, but in the most basic
      * Average Exec Time [...] milliseconds
      *
      */
+```
 
 For more examples, check out the [Documentation] (https://github.com/theburningmonk/SimpleSpeedTester/wiki/Examples) page.
 
