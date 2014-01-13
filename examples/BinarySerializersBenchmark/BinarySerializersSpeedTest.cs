@@ -135,7 +135,7 @@ namespace SimlpeSpeedTester.Example
                 Console.WriteLine(deserializationTestSummary);
             }
 
-            Console.WriteLine("--------------------------------------------------------");
+            Console.WriteLine("--------------------------------------------------------\n\n");
 
             return Tuple.Create(serializationTestSummary, deserializationTestSummary, avgPayload);
         }

@@ -10,6 +10,7 @@ open System
 open System.Collections.Generic
 
 open FSharp.Charting
+open FSharp.Charting.ChartTypes
 
 open SimlpeSpeedTester.Example
 open SimpleSpeedTester.Interfaces
@@ -21,23 +22,40 @@ let prettyPrint (results : Dictionary<string, ITestResultSummary * ITestResultSu
             | KeyValue(_, (ser, null, _)) -> ser.AverageExecutionTime
             | KeyValue(_, (ser, deser, _)) -> ser.AverageExecutionTime + deser.AverageExecutionTime)
 
-    printfn "----------------------------------------------------------------------------------------------------------------------------------"
-    printfn "%-50s %-25s %-25s %-20s" "Name" "Serialization (ms)" "Deserialization (ms)" "Payload (bytes)"
-    printfn "----------------------------------------------------------------------------------------------------------------------------------"
+    printfn "-----------------------------------------------------------------------------------------------------------------------------"
+    printfn "%-40s %-22s %-22s %-20s" "Name" "Serialization (ms)" "Deserialization (ms)" "Payload (bytes)"
+    printfn "-----------------------------------------------------------------------------------------------------------------------------"
 
     for (KeyValue(name, (ser, deser, payload))) in sortedResults do
-        printfn "%-50s %-25f %-25s %-20f" 
+        printfn "%-40s %-22f %-22s %-20f" 
                 name
                 ser.AverageExecutionTime
                 (match deser with | null -> "n/a" | x -> x.AverageExecutionTime.ToString())
                 payload
 
-    printfn "----------------------------------------------------------------------------------------------------------------------------------"
+    printfn "-----------------------------------------------------------------------------------------------------------------------------"
 
-    let serResults = sortedResults |> Seq.map (function (KeyValue(name, (ser, _, _))) -> name, ser.AverageExecutionTime)
-    (Chart.Bar serResults).WithTitle("Serialization Speed").ShowChart()
-    let deserResults = sortedResults |> Seq.choose (function (KeyValue(name, (_, deser, _))) -> match deser with | null -> None | x -> Some(name, x.AverageExecutionTime))
-    (Chart.Bar deserResults).WithTitle("Deserialization Speed").ShowChart()
+    let serResults   = sortedResults 
+                       |> Seq.map (function (KeyValue(name, (ser, _, _))) -> name, ser.AverageExecutionTime)
+    let deserResults = sortedResults 
+                       |> Seq.map (function (KeyValue(name, (_, deser, _))) -> match deser with | null -> name, 0.0 | x -> name, x.AverageExecutionTime)
+    
+    Chart
+        .Combine(
+            [ Chart.Bar(serResults, Name = "Serialization", Color = Drawing.Color.Blue)
+              Chart.Bar(deserResults, Name = "Deserialization", Color = Drawing.Color.Red) ])
+        .WithXAxis(Enabled = true,
+                   MajorGrid = Grid(Enabled = false),
+                   MajorTickMark = TickMark(Enabled = true, Interval = 1.0, IntervalOffset = 1.0,
+                                            Size = Windows.Forms.DataVisualization.Charting.TickMarkStyle.OutsideArea),
+                   LabelStyle = LabelStyle.Create(TruncatedLabels = false, IsStaggered = false, 
+                                                  Interval = 1.0))
+        .WithYAxis(Enabled = true, Title = "Time (ms)",
+                   MajorGrid  = Grid(Enabled = true),
+                   MinorGrid  = Grid(Enabled = true, LineDashStyle = Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dot),
+                   LabelStyle = LabelStyle.Create(TruncatedLabels = false, IsStaggered = false))
+        .WithLegend(Enabled = true, Docking = Docking.Right, Alignment = Drawing.StringAlignment.Center)
+        .ShowChart()
 
 let runBinaryBenchmark () =
     printfn "------- Binary Serializers --------"
@@ -62,9 +80,7 @@ let rec choose () =
     let answer = Console.ReadLine()
     match answer with
     | "1" -> runBinaryBenchmark()
-             choose()
     | "2" -> runJsonBenchmark()
-             choose()
     | "3" -> printfn "bye!"
     | _ -> printfn "Sorry, I don't recognize that answer, please enter 1, 2, or 3"
            choose()
