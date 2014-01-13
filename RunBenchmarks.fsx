@@ -1,5 +1,6 @@
 ﻿#I "examples/BinarySerializersBenchmark/bin/Debug"
 #I "examples/JsonSerializersBenchmark/bin/Debug"
+#load "packages/FSharp.Charting.0.90.5/FSharp.Charting.fsx"
 
 #r "SimpleSpeedTester.dll"
 #r "BinarySerializersBenchmark.dll"
@@ -7,6 +8,9 @@
 
 open System
 open System.Collections.Generic
+
+open FSharp.Charting
+
 open SimlpeSpeedTester.Example
 open SimpleSpeedTester.Interfaces
 
@@ -29,6 +33,11 @@ let prettyPrint (results : Dictionary<string, ITestResultSummary * ITestResultSu
                 payload
 
     printfn "----------------------------------------------------------------------------------------------------------------------------------"
+
+    let serResults = sortedResults |> Seq.map (function (KeyValue(name, (ser, _, _))) -> name, ser.AverageExecutionTime)
+    (Chart.Bar serResults).WithTitle("Serialization Speed").ShowChart()
+    let deserResults = sortedResults |> Seq.choose (function (KeyValue(name, (_, deser, _))) -> match deser with | null -> None | x -> Some(name, x.AverageExecutionTime))
+    (Chart.Bar deserResults).WithTitle("Deserialization Speed").ShowChart()
 
 let runBinaryBenchmark () =
     printfn "------- Binary Serializers --------"
