@@ -11,16 +11,13 @@ namespace SimlpeSpeedTester.Example
     {        
         static void Main()
         {
-            //Example1();
+            Example1();
 
-            //Example2();
+            Example2();
 
-            //Example3();
+            Example3();
 
-            //Example4();
-
-            // more in-depth test of JSON serializers
-            //JsonSerializersSpeedTest.Start();            
+            Example4();
 
             Console.WriteLine("all done...");
             Console.ReadKey();
