@@ -107,7 +107,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BinarySerializersSpeedTest.cs" />
     <Compile Include="ExceptionOnlyTestOutcomeFilter.cs" />
     <Compile Include="JsonSerializersSpeedTest.cs" />
     <Compile Include="Program.cs" />
@@ -115,7 +114,6 @@
     <Compile Include="SimpleJson.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
