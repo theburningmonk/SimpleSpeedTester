@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Json;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Web.Script.Serialization;
 using System.Xaml;
-using Jayrock.Json;
 using MongoDB.Bson;
-using ServiceStack.Text;
 using SimpleSpeedTester.Core;
 using SimpleSpeedTester.Core.OutcomeFilters;
 using SimpleSpeedTester.Interfaces;
@@ -80,9 +77,6 @@ namespace SimlpeSpeedTester.Example
 
             // speed test MongoDB Driver
             DoSpeedTest("MongoDB Driver BSON", SerializeWithMongoDbDriverBson, DeserializeWithMongoDbDriverBson<SimpleObject>, CountAverageByteArrayPayload);
-
-            // speed test System.Json
-            DoSpeedTest("System.Json", SerializeWithSystemJson, DeserializeWithSystemJson, CountAverageJsonStringPayload);
 
             // speed test XamlServices
             //DoSpeedTest("XamlServices", SerializeWithXamlServices, DeserializeWithXamlServices<SimpleObject>);
@@ -403,39 +397,6 @@ namespace SimlpeSpeedTester.Example
         }
 
         #endregion
-
-        #region System.Json
-
-        private static List<SimpleObject> DeserializeWithSystemJson(List<string> arg) 
-        {
-            return arg.Select(j => 
-            {
-                var v = System.Json.JsonValue.Parse(j);
-                var scores = (System.Json.JsonArray)v["Scores"];
-                return new SimpleObject {
-                    Address = (string)v["Address"],
-                    Id = (int)v["Id"],
-                    Name = (string)v["Name"],
-                    Scores = scores.Select<System.Json.JsonValue, int>(s => (int)s).ToArray(),
-                };
-            }).ToList();
-        }
-
-        private static List<string> SerializeWithSystemJson(List<SimpleObject> objects) 
-        {
-            return objects.Select(o => {
-                var json = new System.Json.JsonObject {
-                    {"Address", o.Address},
-                    {"Id", o.Id},
-                    {"Name", o.Name},
-                    {"Scores", new System.Json.JsonArray(o.Scores.Select(s => new JsonPrimitive(s)))},
-                };
-                return json.ToString();
-            }).ToList();
-        }
-
-        #endregion
-
     }
 
     [DataContract]

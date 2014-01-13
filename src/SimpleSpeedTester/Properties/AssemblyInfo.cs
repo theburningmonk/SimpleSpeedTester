@@ -10,7 +10,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Yan Cui")]
 [assembly: AssemblyProduct("SimpleSpeedTester")]
-[assembly: AssemblyCopyright("Copyright © Yan Cui 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -32,7 +31,7 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.0")]
 
 // expose internal methods to the SimpleSpeedTester.Tests project for unit tests
 [assembly: InternalsVisibleTo("SimpleSpeedTester.Tests")]
