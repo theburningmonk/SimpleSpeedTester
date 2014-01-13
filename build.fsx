@@ -29,7 +29,7 @@ let project = "SimpleSpeedTester"
 
 // Short summary of the project
 // (used as description in AssemblyInfo and as a short summary for NuGet package)
-let summary = "SimpleSpeedTester is a simple, easy to use framework that helps you speed test your .Net code by taking care of some of the orchestration for you."
+let summary = "A simple framework to help benchmark test your .Net code."
 
 // Longer description of the project
 // (used as a description for NuGet package; line breaks are automatically cleaned up)
@@ -63,7 +63,7 @@ let release = parseReleaseNotes (IO.File.ReadAllLines "RELEASE_NOTES.md")
 // Generate assembly info files with the right version & up-to-date information
 Target "AssemblyInfo" (fun _ ->
   let fileName = "src/" + project + "/Properties/AssemblyInfo.cs"
-  CreateFSharpAssemblyInfo fileName
+  CreateCSharpAssemblyInfo fileName
       [ Attribute.Title         project
         Attribute.Product       project
         Attribute.Description   summary
