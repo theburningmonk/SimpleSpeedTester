@@ -68,7 +68,8 @@ Target "AssemblyInfo" (fun _ ->
         Attribute.Product       project
         Attribute.Description   summary
         Attribute.Version       release.AssemblyVersion
-        Attribute.FileVersion   release.AssemblyVersion ] 
+        Attribute.FileVersion   release.AssemblyVersion
+        Attribute.InternalsVisibleTo "SimpleSpeedTester.Tests" ] 
 )
 
 // --------------------------------------------------------------------------------------
