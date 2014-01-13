@@ -40,9 +40,9 @@ namespace SimlpeSpeedTester.Example
         // the objects to perform the tests with
         private static readonly List<SimpleObject> SimpleObjects = Enumerable.Range(1, ObjectsCount).Select(GetSimpleObject).ToList();
 
-        public static Dictionary<string, Tuple<ITestResultSummary, ITestResultSummary>> Run()
+        public static Dictionary<string, Tuple<ITestResultSummary, ITestResultSummary, double>> Run()
         {
-            var results = new Dictionary<string, Tuple<ITestResultSummary, ITestResultSummary>>();
+            var results = new Dictionary<string, Tuple<ITestResultSummary, ITestResultSummary, double>>();
 
             results.Add(
                 "Json.Net",
@@ -92,14 +92,14 @@ namespace SimlpeSpeedTester.Example
                 "MongoDB Driver BSON",
                 DoSpeedTest("MongoDB Driver BSON", SerializeWithMongoDbDriverBson, DeserializeWithMongoDbDriverBson<SimpleObject>, CountAverageByteArrayPayload));
 
-            results.Add(
-                "XamlServices",
-                DoSpeedTest("XamlServices", SerializeWithXamlServices, DeserializeWithXamlServices<SimpleObject>, CountAverageJsonStringPayload));
+            //results.Add(
+            //    "XamlServices",
+            //    DoSpeedTest("XamlServices", SerializeWithXamlServices, DeserializeWithXamlServices<SimpleObject>, CountAverageJsonStringPayload));
 
             return results;
         }
 
-        private static Tuple<ITestResultSummary, ITestResultSummary> DoSpeedTest<T>(
+        private static Tuple<ITestResultSummary, ITestResultSummary, double> DoSpeedTest<T>(
             string testGroupName, 
             Func<List<SimpleObject>, List<T>> serializeFunc, 
             Func<List<T>, List<SimpleObject>> deserializeFunc,
@@ -117,7 +117,8 @@ namespace SimlpeSpeedTester.Example
 
             Console.WriteLine(serializationTestSummary);
 
-            Console.WriteLine("Test Group [{0}] average serialized byte array size is [{1}]", testGroupName, getAvgPayload(data));
+            var avgPayload = getAvgPayload(data);
+            Console.WriteLine("Test Group [{0}] average serialized byte array size is [{1}]", testGroupName, avgPayload);
 
             var objects = new List<SimpleObject>();
             var deserializationTestSummary =
@@ -130,7 +131,7 @@ namespace SimlpeSpeedTester.Example
 
             Console.WriteLine("---------------------------------------------------------\n\n");
 
-            return Tuple.Create(serializationTestSummary, deserializationTestSummary);
+            return Tuple.Create(serializationTestSummary, deserializationTestSummary, avgPayload);
         }
 
         private static SimpleObject GetSimpleObject(int id)

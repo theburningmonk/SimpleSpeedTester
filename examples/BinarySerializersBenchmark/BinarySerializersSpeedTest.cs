@@ -38,9 +38,9 @@ namespace SimlpeSpeedTester.Example
         private static readonly List<SimpleObjectWithFields> SimpleObjectsWithFields = Enumerable.Range(1, ObjectsCount).Select(GetSimpleObjectWithFields).ToList();
         private static readonly List<IserializableSimpleObject> IserializableSimpleObjects = Enumerable.Range(1, ObjectsCount).Select(GetSerializableSimpleObject).ToList();
 
-        public static Dictionary<string, Tuple<ITestResultSummary, ITestResultSummary>> Run()
+        public static Dictionary<string, Tuple<ITestResultSummary, ITestResultSummary, double>> Run()
         {
-            var results = new Dictionary<string, Tuple<ITestResultSummary, ITestResultSummary>>();
+            var results = new Dictionary<string, Tuple<ITestResultSummary, ITestResultSummary, double>>();
 
             results.Add(
                 "BinaryFormatter (with properties)",
@@ -103,7 +103,7 @@ namespace SimlpeSpeedTester.Example
             return results;
         }
 
-        private static Tuple<ITestResultSummary, ITestResultSummary> DoSpeedTest<T>(
+        private static Tuple<ITestResultSummary, ITestResultSummary, double> DoSpeedTest<T>(
             string testGroupName, List<T> objects, Func<List<T>, List<byte[]>> serializeFunc, Func<List<byte[]>, List<T>> deserializeFunc)
         {
             var byteArrays = new List<byte[]>();
@@ -118,7 +118,8 @@ namespace SimlpeSpeedTester.Example
 
             Console.WriteLine(serializationTestSummary);
 
-            Console.WriteLine("Test Group [{0}] average serialized byte array size is [{1}]", testGroupName, byteArrays.Average(arr => arr.Length));
+            var avgPayload = byteArrays.Average(arr => arr.Length);
+            Console.WriteLine("Test Group [{0}] average serialized byte array size is [{1}]", testGroupName, avgPayload);
 
             var clones = new List<T>();
             ITestResultSummary deserializationTestSummary = null;
@@ -136,7 +137,7 @@ namespace SimlpeSpeedTester.Example
 
             Console.WriteLine("--------------------------------------------------------");
 
-            return Tuple.Create(serializationTestSummary, deserializationTestSummary);
+            return Tuple.Create(serializationTestSummary, deserializationTestSummary, avgPayload);
         }
 
         private static Bert GetSimpleObjectBert(int id)
