@@ -38,68 +38,72 @@ namespace SimlpeSpeedTester.Example
         private static readonly List<SimpleObjectWithFields> SimpleObjectsWithFields = Enumerable.Range(1, ObjectsCount).Select(GetSimpleObjectWithFields).ToList();
         private static readonly List<IserializableSimpleObject> IserializableSimpleObjects = Enumerable.Range(1, ObjectsCount).Select(GetSerializableSimpleObject).ToList();
 
-        public static void Start()
+        public static Dictionary<string, Tuple<ITestResultSummary, ITestResultSummary>> Run()
         {
-            // speed test binary formatter
-            DoSpeedTest("BinaryFormatter (with properties)", SimpleObjects, SerializeWithBinaryFormatter, DeserializeWithBinaryFormatter<SimpleObject>);
+            var results = new Dictionary<string, Tuple<ITestResultSummary, ITestResultSummary>>();
 
-            DoSpeedTest("BinaryFormatter (with fields)", SimpleObjectsWithFields, SerializeWithBinaryFormatter, DeserializeWithBinaryFormatter<SimpleObjectWithFields>);
+            results.Add(
+                "BinaryFormatter (with properties)",
+                DoSpeedTest("BinaryFormatter (with properties)", SimpleObjects, SerializeWithBinaryFormatter, DeserializeWithBinaryFormatter<SimpleObject>));
 
-            // speed test binary formatter when used with an ISerializable type
-            DoSpeedTest("BinaryFormatterWithISerializable", IserializableSimpleObjects, SerializeWithBinaryFormatter, DeserializeWithBinaryFormatter<IserializableSimpleObject>);
+            results.Add(
+                "BinaryFormatter (with fields)",
+                DoSpeedTest("BinaryFormatter (with fields)", SimpleObjectsWithFields, SerializeWithBinaryFormatter, DeserializeWithBinaryFormatter<SimpleObjectWithFields>));
 
-            // speed test protobuf-net
-            DoSpeedTest("Protobuf-Net (with properties)", SimpleObjects, SerializeWithProtobufNet, DeserializeWithProtobufNet<SimpleObject>);
+            // speed test binary formatter when used with an ISerializable type            
+            results.Add(
+                "BinaryFormatter (with ISerializable)",
+                DoSpeedTest("BinaryFormatter (with ISerializable)", IserializableSimpleObjects, SerializeWithBinaryFormatter, DeserializeWithBinaryFormatter<IserializableSimpleObject>));
 
-            DoSpeedTest("Protobuf-Net (with fields)", SimpleObjectsWithFields, SerializeWithProtobufNet, DeserializeWithProtobufNet<SimpleObjectWithFields>);
+            results.Add(
+                "Protobuf-Net (with properties)",
+                DoSpeedTest("Protobuf-Net (with properties)", SimpleObjects, SerializeWithProtobufNet, DeserializeWithProtobufNet<SimpleObject>));
+            
+            results.Add(
+                "Protobuf-Net (with fields)",
+                DoSpeedTest("Protobuf-Net (with fields)", SimpleObjectsWithFields, SerializeWithProtobufNet, DeserializeWithProtobufNet<SimpleObjectWithFields>));
 
             // speed test binary writer (only for reference, won't be able to deserialize)
-            DoSpeedTest("BinaryWriter", SimpleObjects, SerializeWithBinaryWriter, null);
+            results.Add(
+                "BinaryWriter",
+                DoSpeedTest("BinaryWriter", SimpleObjects, SerializeWithBinaryWriter, null));
 
-            // speed test message pack
-            DoSpeedTest(
-                "MessagePack (with properties)", 
-                SimpleObjects, 
-                lst => SerializeWithMessagePack(lst, true), 
-                lst => DeserializeWithMessagePack<SimpleObject>(lst, true));
+            results.Add(
+                "MessagePack (with properties)",
+                DoSpeedTest(
+                    "MessagePack (with properties)", 
+                    SimpleObjects, 
+                    lst => SerializeWithMessagePack(lst, true), 
+                    lst => DeserializeWithMessagePack<SimpleObject>(lst, true)));
 
-            // speed test message pack again
-            DoSpeedTest(
+            results.Add(
                 "MessagePack (with fields)",
-                SimpleObjectsWithFields, 
-                lst => SerializeWithMessagePack(lst, false), 
-                lst => DeserializeWithMessagePack<SimpleObjectWithFields>(lst, false));
+                DoSpeedTest(
+                    "MessagePack (with fields)",
+                    SimpleObjectsWithFields, 
+                    lst => SerializeWithMessagePack(lst, false), 
+                    lst => DeserializeWithMessagePack<SimpleObjectWithFields>(lst, false)));
 
-            // speed test message pack again
-            DoSpeedTest(
+            results.Add(
                 "MessageShark (with properties)",
-                SimpleObjects,
-                SerializeWithMessageShark,
-                DeserializeWithMessageShark<SimpleObject>);
+                DoSpeedTest("MessageShark (with properties)", SimpleObjects, SerializeWithMessageShark, DeserializeWithMessageShark<SimpleObject>));
 
-            // speed test Fluroine FX
-            DoSpeedTest(
+            results.Add(
                 "FluorineFx",
-                SimpleObjects,
-                SerializeWithFluorineFx,
-                DeserializeWithFluorineFx<SimpleObject>);
+                DoSpeedTest("FluorineFx", SimpleObjects, SerializeWithFluorineFx, DeserializeWithFluorineFx<SimpleObject>));
 
-            // speed test Filbert
-            DoSpeedTest(
+            results.Add(
                 "Filbert",
-                BertSimpleObjects,
-                SerializeWithFilbert,
-                DeserializeWithFilbert);
+                DoSpeedTest("Filbert", BertSimpleObjects, SerializeWithFilbert, DeserializeWithFilbert));
 
-            // speed test Json.Net BSON serializer
-            DoSpeedTest(
-                "Json.Net BSON", 
-                SimpleObjects,
-                SerializeWithJsonNetBson, 
-                DeserializeWithJsonNetBson<SimpleObject>);
+            results.Add(
+                "Json.Net BSON",
+                DoSpeedTest("Json.Net BSON", SimpleObjects, SerializeWithJsonNetBson, DeserializeWithJsonNetBson<SimpleObject>));
+
+            return results;
         }
 
-        private static void DoSpeedTest<T>(
+        private static Tuple<ITestResultSummary, ITestResultSummary> DoSpeedTest<T>(
             string testGroupName, List<T> objects, Func<List<T>, List<byte[]>> serializeFunc, Func<List<byte[]>, List<T>> deserializeFunc)
         {
             var byteArrays = new List<byte[]>();
@@ -117,10 +121,11 @@ namespace SimlpeSpeedTester.Example
             Console.WriteLine("Test Group [{0}] average serialized byte array size is [{1}]", testGroupName, byteArrays.Average(arr => arr.Length));
 
             var clones = new List<T>();
+            ITestResultSummary deserializationTestSummary = null;
 
             if (deserializeFunc != null)
             {
-                var deserializationTestSummary =
+                deserializationTestSummary =
                     testGroup
                         .Plan("Deserialization", () => clones = deserializeFunc(byteArrays), TestRuns)
                         .GetResult()
@@ -130,6 +135,8 @@ namespace SimlpeSpeedTester.Example
             }
 
             Console.WriteLine("--------------------------------------------------------");
+
+            return Tuple.Create(serializationTestSummary, deserializationTestSummary);
         }
 
         private static Bert GetSimpleObjectBert(int id)

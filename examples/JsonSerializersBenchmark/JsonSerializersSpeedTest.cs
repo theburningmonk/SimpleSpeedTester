@@ -40,49 +40,66 @@ namespace SimlpeSpeedTester.Example
         // the objects to perform the tests with
         private static readonly List<SimpleObject> SimpleObjects = Enumerable.Range(1, ObjectsCount).Select(GetSimpleObject).ToList();
 
-        public static void Start()
+        public static Dictionary<string, Tuple<ITestResultSummary, ITestResultSummary>> Run()
         {
-            // speed test Json.Net serializer
-            DoSpeedTest("Json.Net", SerializeWithJsonNet, DeserializeWithJsonNet<SimpleObject>, CountAverageJsonStringPayload);
+            var results = new Dictionary<string, Tuple<ITestResultSummary, ITestResultSummary>>();
 
-            // speed test Json.Net BSON serializer
-            DoSpeedTest("Json.Net BSON", SerializeWithJsonNetBson, DeserializeWithJsonNetBson<SimpleObject>, CountAverageByteArrayPayload);
+            results.Add(
+                "Json.Net",
+                DoSpeedTest("Json.Net", SerializeWithJsonNet, DeserializeWithJsonNet<SimpleObject>, CountAverageJsonStringPayload));
 
-            // speed test protobuf-net
-            DoSpeedTest("Protobuf-Net", SerializeWithProtobufNet, DeserializeWithProtobufNet<SimpleObject>, CountAverageByteArrayPayload);
+            results.Add(
+                "Json.Net BSON",
+                DoSpeedTest("Json.Net BSON", SerializeWithJsonNetBson, DeserializeWithJsonNetBson<SimpleObject>, CountAverageByteArrayPayload));
+            
+            results.Add(
+                "Protobuf-Net",
+                DoSpeedTest("Protobuf-Net", SerializeWithProtobufNet, DeserializeWithProtobufNet<SimpleObject>, CountAverageByteArrayPayload));
 
-            // speed test ServiceStack.Text Json serializer
-            DoSpeedTest("ServiceStack.Text", SerializeWithServiceStack, DeserializeWithServiceStack<SimpleObject>, CountAverageJsonStringPayload);
+            results.Add(
+                "ServiceStack.Text",
+                DoSpeedTest("ServiceStack.Text", SerializeWithServiceStack, DeserializeWithServiceStack<SimpleObject>, CountAverageJsonStringPayload));
 
-            // speed test DataContractJsonSerializer
-            DoSpeedTest("DataContractJsonSerializer", SerializeWithDataContractJsonSerializer, DeserializeWithDataContractJsonSerializer<SimpleObject>, CountAverageJsonStringPayload);
+            results.Add(
+                "DataContractJsonSerializer",
+                DoSpeedTest("DataContractJsonSerializer", SerializeWithDataContractJsonSerializer, DeserializeWithDataContractJsonSerializer<SimpleObject>, CountAverageJsonStringPayload));
 
-            // speed test JavaScriptSerializer
-            DoSpeedTest("JavaScriptSerializer", SerializeWithJavaScriptSerializer, DeserializeWithJavaScriptSerializer<SimpleObject>, CountAverageJsonStringPayload);
+            results.Add(
+                "JavaScriptSerializer",
+                DoSpeedTest("JavaScriptSerializer", SerializeWithJavaScriptSerializer, DeserializeWithJavaScriptSerializer<SimpleObject>, CountAverageJsonStringPayload));
 
-            // speed test SimpleJson
-            DoSpeedTest("SimpleJson", SerializeWithSimpleJson, DeserializeWithSimpleJson<SimpleObject>, CountAverageJsonStringPayload);
+            results.Add(
+                "SimpleJson",
+                DoSpeedTest("SimpleJson", SerializeWithSimpleJson, DeserializeWithSimpleJson<SimpleObject>, CountAverageJsonStringPayload));
 
-            // speed test fastJson
-            DoSpeedTest("fastJson", SerializeWithFastJson, DeserializeWithFastJson<SimpleObject>, CountAverageJsonStringPayload);
+            results.Add(
+                "fastJson",
+                DoSpeedTest("fastJson", SerializeWithFastJson, DeserializeWithFastJson<SimpleObject>, CountAverageJsonStringPayload));
 
-            // speed test JayRock
-            DoSpeedTest("JayRock", SerializeWithJayRock, DeserializeWithJayRock<SimpleObject>, CountAverageJsonStringPayload);
+            results.Add(
+                "JayRock",
+                DoSpeedTest("JayRock", SerializeWithJayRock, DeserializeWithJayRock<SimpleObject>, CountAverageJsonStringPayload));
 
-            // speed test JsonFx
-            DoSpeedTest("JsonFx", SerializeWithJsonFx, DeserializeWithJsonFx<SimpleObject>, CountAverageJsonStringPayload);
+            results.Add(
+                "JsonFx",
+                DoSpeedTest("JsonFx", SerializeWithJsonFx, DeserializeWithJsonFx<SimpleObject>, CountAverageJsonStringPayload));
 
-            // speed test MongoDB Driver
-            DoSpeedTest("MongoDB Driver", SerializeWithMongoDbDriver, DeserializeWithMongoDbDriver<SimpleObject>, CountAverageJsonStringPayload);
+            results.Add(
+                "MongoDB Driver",
+                DoSpeedTest("MongoDB Driver", SerializeWithMongoDbDriver, DeserializeWithMongoDbDriver<SimpleObject>, CountAverageJsonStringPayload));
 
-            // speed test MongoDB Driver
-            DoSpeedTest("MongoDB Driver BSON", SerializeWithMongoDbDriverBson, DeserializeWithMongoDbDriverBson<SimpleObject>, CountAverageByteArrayPayload);
+            results.Add(
+                "MongoDB Driver BSON",
+                DoSpeedTest("MongoDB Driver BSON", SerializeWithMongoDbDriverBson, DeserializeWithMongoDbDriverBson<SimpleObject>, CountAverageByteArrayPayload));
 
-            // speed test XamlServices
-            //DoSpeedTest("XamlServices", SerializeWithXamlServices, DeserializeWithXamlServices<SimpleObject>);
+            results.Add(
+                "XamlServices",
+                DoSpeedTest("XamlServices", SerializeWithXamlServices, DeserializeWithXamlServices<SimpleObject>, CountAverageJsonStringPayload));
+
+            return results;
         }
 
-        private static void DoSpeedTest<T>(
+        private static Tuple<ITestResultSummary, ITestResultSummary> DoSpeedTest<T>(
             string testGroupName, 
             Func<List<SimpleObject>, List<T>> serializeFunc, 
             Func<List<T>, List<SimpleObject>> deserializeFunc,
@@ -112,6 +129,8 @@ namespace SimlpeSpeedTester.Example
             Console.WriteLine(deserializationTestSummary);
 
             Console.WriteLine("---------------------------------------------------------\n\n");
+
+            return Tuple.Create(serializationTestSummary, deserializationTestSummary);
         }
 
         private static SimpleObject GetSimpleObject(int id)
