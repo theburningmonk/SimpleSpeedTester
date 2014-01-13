@@ -16,6 +16,9 @@ TestResults
 # Build results
 [Dd]ebug/
 [Rr]elease/
+build/
+test/
+deploy/
 x64/
 *_i.c
 *_p.c
@@ -54,6 +57,7 @@ ipch/
 _ReSharper*
 
 # NCrunch
+*ncrunch*/*
 *.ncrunch*
 .*crunch*.local.xml
 
@@ -85,6 +89,7 @@ csx
 [Oo]bj
 sql
 TestResults
+[Tt]est[Rr]esult*
 *.Cache
 ClientBin
 [Ss]tyle[Cc]op.*
