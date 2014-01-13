@@ -5,9 +5,9 @@
     <version>@build.number@</version>
     <authors>@authors@</authors>
     <owners>@authors@</owners>
-    <licenseUrl>https://github.com/theburningmonk/ReactoKinesix/blob/master/LICENSE.txt</licenseUrl>
-    <projectUrl>https://github.com/theburningmonk/ReactoKinesix/</projectUrl>
-    <iconUrl>https://raw.github.com/theburningmonk/ReactoKinesix/master/nuget/logo.png</iconUrl>
+    <licenseUrl>https://github.com/theburningmonk/SimpleSpeedTester/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/theburningmonk/SimpleSpeedTester</projectUrl>
+    <iconUrl>https://raw.github.com/theburningmonk/SimpleSpeedTester/master/nuget/sst-logo.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>@summary@</summary>
     <description>
