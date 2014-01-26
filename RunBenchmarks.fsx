@@ -1,5 +1,5 @@
-﻿#I "examples/BinarySerializersBenchmark/bin/Debug"
-#I "examples/JsonSerializersBenchmark/bin/Debug"
+﻿#I "examples/BinarySerializersBenchmark/bin/Release"
+#I "examples/JsonSerializersBenchmark/bin/Release"
 #load "packages/FSharp.Charting.0.90.5/FSharp.Charting.fsx"
 
 #r "SimpleSpeedTester.dll"

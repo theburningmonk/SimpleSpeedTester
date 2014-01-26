@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Json;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
@@ -91,6 +92,10 @@ namespace SimlpeSpeedTester.Example
             results.Add(
                 "MongoDB Driver BSON",
                 DoSpeedTest("MongoDB Driver BSON", SerializeWithMongoDbDriverBson, DeserializeWithMongoDbDriverBson<SimpleObject>, CountAverageByteArrayPayload));
+
+            results.Add(
+                "System.Json",
+                DoSpeedTest("System.Json", SerializeWithSystemJson, DeserializeWithSystemJson, CountAverageJsonStringPayload));
 
             //results.Add(
             //    "XamlServices",
@@ -414,6 +419,40 @@ namespace SimlpeSpeedTester.Example
                     }
                 }).Cast<T>().ToList();
             return objects;
+        }
+
+        #endregion
+
+        #region System.Json
+
+        private static List<string> SerializeWithSystemJson(List<SimpleObject> objects)
+        {
+            return objects.Select(o =>
+            {
+                var json = new JsonObject {
+                    { "Address", o.Address },
+                    { "Id", o.Id },
+                    { "Name", o.Name },
+                    { "Scores", new JsonArray(o.Scores.Select(s => new JsonPrimitive(s))) },
+                };
+                return json.ToString();
+            }).ToList();
+        }
+
+        private static List<SimpleObject> DeserializeWithSystemJson(List<string> arg)
+        {
+            return arg.Select(j =>
+            {
+                var v = JsonValue.Parse(j);
+                var scores = (JsonArray)v["Scores"];
+                return new SimpleObject
+                {
+                    Address = (string)v["Address"],
+                    Id = (int)v["Id"],
+                    Name = (string)v["Name"],
+                    Scores = scores.Select<JsonValue, int>(s => (int)s).ToArray(),
+                };
+            }).ToList();
         }
 
         #endregion
