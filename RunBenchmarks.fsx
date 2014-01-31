@@ -1,10 +1,12 @@
 ﻿#I "examples/BinarySerializersBenchmark/bin/Release"
 #I "examples/JsonSerializersBenchmark/bin/Release"
+#I "examples/CollectionBenchmark/bin/Release"
 #load "packages/FSharp.Charting.0.90.5/FSharp.Charting.fsx"
 
 #r "SimpleSpeedTester.dll"
 #r "BinarySerializersBenchmark.dll"
 #r "JsonSerializersBenchmark.dll"
+#r "CollectionBenchmark.dll"
 
 open System
 open System.Collections.Generic
@@ -75,13 +77,22 @@ let runJsonBenchmark () =
     printfn "all done."
     prettyPrint results
 
+let runListBenchmark () =
+    printfn "------- Lists --------"
+    printfn "Running Benchmarks...\n\n\n\n\n"
+
+    let results = CollectionSpeedTest.Run()
+
+    printfn "all done."
+
 let rec choose () =
-    printfn "Choose benchmark to run:\n   1. Binary serializers\n   2. JSON serializers\n   3. Exit"
+    printfn "Choose benchmark to run:\n   1. Binary serializers\n   2. JSON serializers\n   3. Lists\n   4. Exit"
     let answer = Console.ReadLine()
     match answer with
     | "1" -> runBinaryBenchmark()
     | "2" -> runJsonBenchmark()
-    | "3" -> printfn "bye!"
+    | "3" -> runListBenchmark()
+    | "4" -> printfn "bye!"
     | _ -> printfn "Sorry, I don't recognize that answer, please enter 1, 2, or 3"
            choose()
 
