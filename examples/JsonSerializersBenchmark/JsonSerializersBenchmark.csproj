@@ -43,8 +43,9 @@
     <Reference Include="Jayrock.Json">
       <HintPath>..\..\packages\jayrock-json.0.9.16530\lib\net40\Jayrock.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Jil">
-      <HintPath>..\..\packages\Jil.1.0.0\lib\net45\Jil.dll</HintPath>
+    <Reference Include="Jil, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Jil.1.0.1\lib\net45\Jil.dll</HintPath>
     </Reference>
     <Reference Include="JsonFx">
       <HintPath>..\..\packages\JsonFx.2.0.1209.2802\lib\net40\JsonFx.dll</HintPath>
