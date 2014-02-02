@@ -101,6 +101,10 @@ namespace SimlpeSpeedTester.Example
             //    "XamlServices",
             //    DoSpeedTest("XamlServices", SerializeWithXamlServices, DeserializeWithXamlServices<SimpleObject>, CountAverageJsonStringPayload));
 
+            results.Add(
+                "Jil",
+                DoSpeedTest("Jil", SerializeWithJil, DeserializeWithJil, CountAverageJsonStringPayload));
+
             return results;
         }
 
@@ -424,6 +428,22 @@ namespace SimlpeSpeedTester.Example
         #endregion
 
         #region System.Json
+
+        private static List<string> SerializeWithJil(List<SimpleObject> objects)
+        {
+            return objects.Select(o =>
+            {
+                return Jil.JSON.Serialize(o);
+            }).ToList();
+        }
+
+        private static List<SimpleObject> DeserializeWithJil(List<string> arg)
+        {
+            return arg.Select(j =>
+            {
+                return Jil.JSON.Deserialize<SimpleObject>(j);
+            }).ToList();
+        }
 
         private static List<string> SerializeWithSystemJson(List<SimpleObject> objects)
         {
