@@ -8,7 +8,7 @@ using Microsoft.FSharp.Collections;
 using SimpleSpeedTester.Core;
 using SimpleSpeedTester.Interfaces;
 
-namespace SimlpeSpeedTester.Example
+namespace SimpleSpeedTester.Example
 {
     public class CollectionSpeedTest
     {

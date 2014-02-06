@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SimlpeSpeedTester.Example
+namespace SimpleSpeedTester.Example
 {
     public static class EnumerableExtensions
     {

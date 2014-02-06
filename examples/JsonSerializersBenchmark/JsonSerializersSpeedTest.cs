@@ -20,7 +20,7 @@ using JsonNetBsonWriter = Newtonsoft.Json.Bson.BsonWriter;
 using JsonFxReader = JsonFx.Json.JsonReader;
 using JsonFxWriter = JsonFx.Json.JsonWriter;
 
-namespace SimlpeSpeedTester.Example
+namespace SimpleSpeedTester.Example
 {
     /// <summary>
     /// Demo program which compares the serializatoin and deserialization speed of 4 popular JSON serializers

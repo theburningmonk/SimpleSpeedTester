@@ -8,8 +8,8 @@
     <ProjectGuid>{7ADA7026-5757-4E93-AC72-D7E69DC08433}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SimlpeSpeedTester.Example</RootNamespace>
-    <AssemblyName>SimlpeSpeedTester.Example</AssemblyName>
+    <RootNamespace>SimpleSpeedTester.Example</RootNamespace>
+    <AssemblyName>SimpleSpeedTester.Example</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>

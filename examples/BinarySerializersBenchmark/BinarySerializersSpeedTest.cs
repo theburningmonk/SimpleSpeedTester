@@ -17,7 +17,7 @@ using JsonNetBsonReader = Newtonsoft.Json.Bson.BsonReader;
 using JsonNetBsonWriter = Newtonsoft.Json.Bson.BsonWriter;
 using JsonNetJsonSerializer = Newtonsoft.Json.JsonSerializer;
 
-namespace SimlpeSpeedTester.Example
+namespace SimpleSpeedTester.Example
 {
     using Filbert.Core;
 

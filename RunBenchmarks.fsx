@@ -14,7 +14,7 @@ open System.Collections.Generic
 open FSharp.Charting
 open FSharp.Charting.ChartTypes
 
-open SimlpeSpeedTester.Example
+open SimpleSpeedTester.Example
 open SimpleSpeedTester.Interfaces
 
 let prettyPrint (results : Dictionary<string, ITestResultSummary * ITestResultSummary * double>) =
