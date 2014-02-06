@@ -88,6 +88,10 @@
       <Project>{87b76a3e-3932-47f1-924d-c80a1ae92787}</Project>
       <Name>SimpleSpeedTester</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TestRecord\TestRecord.fsproj">
+      <Project>{088c6ffb-7156-4172-96d8-32111c602067}</Project>
+      <Name>TestRecord</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

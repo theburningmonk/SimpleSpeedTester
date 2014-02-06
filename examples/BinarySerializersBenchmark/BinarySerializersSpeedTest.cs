@@ -34,6 +34,7 @@ namespace SimpleSpeedTester.Example
 
         // the objects to perform the tests with
         private static readonly List<SimpleObject> SimpleObjects = Enumerable.Range(1, ObjectsCount).Select(GetSimpleObject).ToList();
+        private static readonly List<TestRecords.SimpleRecord> SimpleRecords = Enumerable.Range(1, ObjectsCount).Select(GetSimpleRecord).ToList();
         private static readonly List<Bert> BertSimpleObjects = Enumerable.Range(1, ObjectsCount).Select(GetSimpleObjectBert).ToList();
         private static readonly List<SimpleObjectWithFields> SimpleObjectsWithFields = Enumerable.Range(1, ObjectsCount).Select(GetSimpleObjectWithFields).ToList();
         private static readonly List<IserializableSimpleObject> IserializableSimpleObjects = Enumerable.Range(1, ObjectsCount).Select(GetSerializableSimpleObject).ToList();
@@ -70,6 +71,10 @@ namespace SimpleSpeedTester.Example
 
             results.Add(
                 "FsPickler (Simple Objects)",
+                DoSpeedTest("FsPickler", SimpleObjects, SerializeWithFsPickler, DeserializeWithFsPickler));
+
+            results.Add(
+                "FsPickler (Simple Records)",
                 DoSpeedTest("FsPickler", SimpleObjects, SerializeWithFsPickler, DeserializeWithFsPickler));
 
             results.Add(
@@ -193,6 +198,11 @@ namespace SimpleSpeedTester.Example
                            Address = "Planet Earth",
                            Scores = Enumerable.Range(0, 10).ToArray()
                        };
+        }
+
+        private static TestRecords.SimpleRecord GetSimpleRecord(int id)
+        {
+            return new TestRecords.SimpleRecord(100000, "Simple", "Planet Earth", Enumerable.Range(0, 10).ToArray());
         }
 
         private static SimpleObjectWithFields GetSimpleObjectWithFields(int id)
