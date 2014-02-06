@@ -58,7 +58,7 @@ namespace SimpleSpeedTester.Example
             results.Add(
                 "Protobuf-Net (with properties)",
                 DoSpeedTest("Protobuf-Net (with properties)", SimpleObjects, SerializeWithProtobufNet, DeserializeWithProtobufNet<SimpleObject>));
-            
+
             results.Add(
                 "Protobuf-Net (with fields)",
                 DoSpeedTest("Protobuf-Net (with fields)", SimpleObjectsWithFields, SerializeWithProtobufNet, DeserializeWithProtobufNet<SimpleObjectWithFields>));
@@ -66,22 +66,22 @@ namespace SimpleSpeedTester.Example
             // speed test binary writer (only for reference, won't be able to deserialize)
             results.Add(
                 "BinaryWriter",
-                DoSpeedTest("BinaryWriter", SimpleObjects, SerializeWithBinaryWriter, null));
+                DoSpeedTest("BinaryWriter", SimpleObjects, SerializeWithBinaryWriter, DeserializeWithBinaryReader));
 
             results.Add(
                 "MessagePack (with properties)",
                 DoSpeedTest(
-                    "MessagePack (with properties)", 
-                    SimpleObjects, 
-                    lst => SerializeWithMessagePack(lst, true), 
+                    "MessagePack (with properties)",
+                    SimpleObjects,
+                    lst => SerializeWithMessagePack(lst, true),
                     lst => DeserializeWithMessagePack<SimpleObject>(lst, true)));
 
             results.Add(
                 "MessagePack (with fields)",
                 DoSpeedTest(
                     "MessagePack (with fields)",
-                    SimpleObjectsWithFields, 
-                    lst => SerializeWithMessagePack(lst, false), 
+                    SimpleObjectsWithFields,
+                    lst => SerializeWithMessagePack(lst, false),
                     lst => DeserializeWithMessagePack<SimpleObjectWithFields>(lst, false)));
 
             results.Add(
@@ -250,6 +250,31 @@ namespace SimpleSpeedTester.Example
         
         #region Binary Writer
 
+        private static int[] ReadScores(BinaryReader reader)
+        {
+            var count = reader.ReadInt32();
+            return Enumerable.Range(0, count).Select(_ => reader.ReadInt32()).ToArray();
+        }
+
+        private static List<SimpleObject> DeserializeWithBinaryReader(List<byte[]> payloads)
+        {
+            return
+                payloads.Select(o =>
+                {
+                    using (var ms = new MemoryStream(o))
+                    {
+                        var reader = new BinaryReader(ms);
+                        return new SimpleObject
+                        {
+                            Id = reader.ReadInt32(),
+                            Name = reader.ReadString(),
+                            Address = reader.ReadString(),
+                            Scores = ReadScores(reader)
+                        };
+                    }
+                }).ToList();
+        }
+
         private static List<byte[]> SerializeWithBinaryWriter(List<SimpleObject> objects)
         {
             return objects.Select(SerializeWithBinaryWriter).ToList();
@@ -264,7 +289,9 @@ namespace SimpleSpeedTester.Example
                 binaryWriter.Write(obj.Id);
                 binaryWriter.Write(obj.Name);
                 binaryWriter.Write(obj.Address);
+                binaryWriter.Write(obj.Scores.Length);
                 Array.ForEach(obj.Scores, binaryWriter.Write);
+
                 binaryWriter.Flush();
 
                 return memStream.ToArray();
