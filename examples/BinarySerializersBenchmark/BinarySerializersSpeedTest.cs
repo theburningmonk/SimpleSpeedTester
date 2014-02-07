@@ -70,12 +70,8 @@ namespace SimpleSpeedTester.Example
                 DoSpeedTest("BinaryWriter", SimpleObjects, SerializeWithBinaryWriter, DeserializeWithBinaryReader));
 
             results.Add(
-                "FsPickler (Simple Objects)",
-                DoSpeedTest("FsPickler", SimpleObjects, SerializeWithFsPickler, DeserializeWithFsPickler));
-
-            results.Add(
                 "FsPickler (Simple Records)",
-                DoSpeedTest("FsPickler", SimpleObjects, SerializeWithFsPickler, DeserializeWithFsPickler));
+                DoSpeedTest("FsPickler", SimpleRecords, SerializeWithFsPickler, DeserializeWithFsPickler<TestRecords.SimpleRecord>));
 
             results.Add(
                 "MessagePack (with properties)",
@@ -112,7 +108,7 @@ namespace SimpleSpeedTester.Example
             return results;
         }
 
-        private static List<SimpleObject> DeserializeWithFsPickler(List<byte[]> payloads)
+        private static List<T> DeserializeWithFsPickler<T>(List<byte[]> payloads)
         {
             var fsp = new FsPickler.FsPickler();
 
@@ -121,12 +117,12 @@ namespace SimpleSpeedTester.Example
                 {
                     using (var ms = new MemoryStream(payload))
                     {
-                        return fsp.Deserialize<SimpleObject>(ms);
+                        return fsp.Deserialize<T>(ms);
                     }
                 }).ToList();
         }
 
-        private static List<byte[]> SerializeWithFsPickler(List<SimpleObject> objects)
+        private static List<byte[]> SerializeWithFsPickler<T>(List<T> objects)
         {
             var fsp = new FsPickler.FsPickler();
 
