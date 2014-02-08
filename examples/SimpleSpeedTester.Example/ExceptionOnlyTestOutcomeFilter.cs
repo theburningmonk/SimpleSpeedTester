@@ -3,7 +3,7 @@ using System.Linq;
 using SimpleSpeedTester.Core;
 using SimpleSpeedTester.Interfaces;
 
-namespace SimlpeSpeedTester.Example
+namespace SimpleSpeedTester.Example
 {
     public sealed class ExceptionOnlyTestOutcomeFilter : ITestOutcomeFilter
     {

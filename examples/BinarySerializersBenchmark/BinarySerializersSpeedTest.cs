@@ -17,7 +17,7 @@ using JsonNetBsonReader = Newtonsoft.Json.Bson.BsonReader;
 using JsonNetBsonWriter = Newtonsoft.Json.Bson.BsonWriter;
 using JsonNetJsonSerializer = Newtonsoft.Json.JsonSerializer;
 
-namespace SimlpeSpeedTester.Example
+namespace SimpleSpeedTester.Example
 {
     using Filbert.Core;
 
@@ -34,6 +34,7 @@ namespace SimlpeSpeedTester.Example
 
         // the objects to perform the tests with
         private static readonly List<SimpleObject> SimpleObjects = Enumerable.Range(1, ObjectsCount).Select(GetSimpleObject).ToList();
+        private static readonly List<TestRecords.SimpleRecord> SimpleRecords = Enumerable.Range(1, ObjectsCount).Select(GetSimpleRecord).ToList();
         private static readonly List<Bert> BertSimpleObjects = Enumerable.Range(1, ObjectsCount).Select(GetSimpleObjectBert).ToList();
         private static readonly List<SimpleObjectWithFields> SimpleObjectsWithFields = Enumerable.Range(1, ObjectsCount).Select(GetSimpleObjectWithFields).ToList();
         private static readonly List<IserializableSimpleObject> IserializableSimpleObjects = Enumerable.Range(1, ObjectsCount).Select(GetSerializableSimpleObject).ToList();
@@ -58,7 +59,7 @@ namespace SimlpeSpeedTester.Example
             results.Add(
                 "Protobuf-Net (with properties)",
                 DoSpeedTest("Protobuf-Net (with properties)", SimpleObjects, SerializeWithProtobufNet, DeserializeWithProtobufNet<SimpleObject>));
-            
+
             results.Add(
                 "Protobuf-Net (with fields)",
                 DoSpeedTest("Protobuf-Net (with fields)", SimpleObjectsWithFields, SerializeWithProtobufNet, DeserializeWithProtobufNet<SimpleObjectWithFields>));
@@ -66,22 +67,26 @@ namespace SimlpeSpeedTester.Example
             // speed test binary writer (only for reference, won't be able to deserialize)
             results.Add(
                 "BinaryWriter",
-                DoSpeedTest("BinaryWriter", SimpleObjects, SerializeWithBinaryWriter, null));
+                DoSpeedTest("BinaryWriter", SimpleObjects, SerializeWithBinaryWriter, DeserializeWithBinaryReader));
+
+            results.Add(
+                "FsPickler (Simple Records)",
+                DoSpeedTest("FsPickler", SimpleRecords, SerializeWithFsPickler, DeserializeWithFsPickler<TestRecords.SimpleRecord>));
 
             results.Add(
                 "MessagePack (with properties)",
                 DoSpeedTest(
-                    "MessagePack (with properties)", 
-                    SimpleObjects, 
-                    lst => SerializeWithMessagePack(lst, true), 
+                    "MessagePack (with properties)",
+                    SimpleObjects,
+                    lst => SerializeWithMessagePack(lst, true),
                     lst => DeserializeWithMessagePack<SimpleObject>(lst, true)));
 
             results.Add(
                 "MessagePack (with fields)",
                 DoSpeedTest(
                     "MessagePack (with fields)",
-                    SimpleObjectsWithFields, 
-                    lst => SerializeWithMessagePack(lst, false), 
+                    SimpleObjectsWithFields,
+                    lst => SerializeWithMessagePack(lst, false),
                     lst => DeserializeWithMessagePack<SimpleObjectWithFields>(lst, false)));
 
             results.Add(
@@ -101,6 +106,35 @@ namespace SimlpeSpeedTester.Example
                 DoSpeedTest("Json.Net BSON", SimpleObjects, SerializeWithJsonNetBson, DeserializeWithJsonNetBson<SimpleObject>));
 
             return results;
+        }
+
+        private static List<T> DeserializeWithFsPickler<T>(List<byte[]> payloads)
+        {
+            var fsp = new FsPickler.FsPickler();
+
+            return
+                payloads.Select(payload =>
+                {
+                    using (var ms = new MemoryStream(payload))
+                    {
+                        return fsp.Deserialize<T>(ms);
+                    }
+                }).ToList();
+        }
+
+        private static List<byte[]> SerializeWithFsPickler<T>(List<T> objects)
+        {
+            var fsp = new FsPickler.FsPickler();
+
+            return
+                objects.Select(o =>
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        fsp.Serialize(ms, o);
+                        return ms.ToArray();
+                    }
+                }).ToList();
         }
 
         private static Tuple<ITestResultSummary, ITestResultSummary, double> DoSpeedTest<T>(
@@ -160,6 +194,11 @@ namespace SimlpeSpeedTester.Example
                            Address = "Planet Earth",
                            Scores = Enumerable.Range(0, 10).ToArray()
                        };
+        }
+
+        private static TestRecords.SimpleRecord GetSimpleRecord(int id)
+        {
+            return new TestRecords.SimpleRecord(100000, "Simple", "Planet Earth", Enumerable.Range(0, 10).ToArray());
         }
 
         private static SimpleObjectWithFields GetSimpleObjectWithFields(int id)
@@ -250,6 +289,31 @@ namespace SimlpeSpeedTester.Example
         
         #region Binary Writer
 
+        private static int[] ReadScores(BinaryReader reader)
+        {
+            var count = reader.ReadInt32();
+            return Enumerable.Range(0, count).Select(_ => reader.ReadInt32()).ToArray();
+        }
+
+        private static List<SimpleObject> DeserializeWithBinaryReader(List<byte[]> payloads)
+        {
+            return
+                payloads.Select(o =>
+                {
+                    using (var ms = new MemoryStream(o))
+                    {
+                        var reader = new BinaryReader(ms);
+                        return new SimpleObject
+                        {
+                            Id = reader.ReadInt32(),
+                            Name = reader.ReadString(),
+                            Address = reader.ReadString(),
+                            Scores = ReadScores(reader)
+                        };
+                    }
+                }).ToList();
+        }
+
         private static List<byte[]> SerializeWithBinaryWriter(List<SimpleObject> objects)
         {
             return objects.Select(SerializeWithBinaryWriter).ToList();
@@ -264,7 +328,9 @@ namespace SimlpeSpeedTester.Example
                 binaryWriter.Write(obj.Id);
                 binaryWriter.Write(obj.Name);
                 binaryWriter.Write(obj.Address);
+                binaryWriter.Write(obj.Scores.Length);
                 Array.ForEach(obj.Scores, binaryWriter.Write);
+
                 binaryWriter.Flush();
 
                 return memStream.ToArray();

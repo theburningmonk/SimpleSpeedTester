@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonSerializersBenchmark", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CollectionBenchmark", "examples\CollectionBenchmark\CollectionBenchmark.csproj", "{94F57EB2-21B7-42B3-A885-B2DE5EE74A10}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "TestRecord", "examples\TestRecord\TestRecord.fsproj", "{088C6FFB-7156-4172-96D8-32111C602067}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +105,16 @@ Global
 		{94F57EB2-21B7-42B3-A885-B2DE5EE74A10}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{94F57EB2-21B7-42B3-A885-B2DE5EE74A10}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{94F57EB2-21B7-42B3-A885-B2DE5EE74A10}.Release|x86.ActiveCfg = Release|Any CPU
+		{088C6FFB-7156-4172-96D8-32111C602067}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{088C6FFB-7156-4172-96D8-32111C602067}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{088C6FFB-7156-4172-96D8-32111C602067}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{088C6FFB-7156-4172-96D8-32111C602067}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{088C6FFB-7156-4172-96D8-32111C602067}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{088C6FFB-7156-4172-96D8-32111C602067}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{088C6FFB-7156-4172-96D8-32111C602067}.Release|Any CPU.Build.0 = Release|Any CPU
+		{088C6FFB-7156-4172-96D8-32111C602067}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{088C6FFB-7156-4172-96D8-32111C602067}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{088C6FFB-7156-4172-96D8-32111C602067}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,7 +5,7 @@ using System.Threading;
 using SimpleSpeedTester.Core;
 using SimpleSpeedTester.Core.OutcomeFilters;
 
-namespace SimlpeSpeedTester.Example
+namespace SimpleSpeedTester.Example
 {
     class Program
     {        
