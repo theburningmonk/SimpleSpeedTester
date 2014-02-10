@@ -37,6 +37,3 @@ For more examples, check out the [Documentation] (https://github.com/theburningm
 Download and install **Simple Speed Tester** using [NuGet](http://nuget.org/packages/SimpleSpeedTester).
 
 <a href="http://nuget.org/packages/SimpleSpeedTester"><img src="http://theburningmonk.com/images/sst-nuget-install.png" alt="NuGet package"/></a>
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/theburningmonk/simplespeedtester/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
