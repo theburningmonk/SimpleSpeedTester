@@ -19,16 +19,18 @@ open SimpleSpeedTester.Interfaces
 
 let prettyPrint (results : Dictionary<string, ITestResultSummary * ITestResultSummary * double>) =
     let sortedResults = 
-        results 
+        results
+        |> Seq.map (|KeyValue|)
         |> Seq.sortBy (function 
-            | KeyValue(_, (ser, null, _)) -> ser.AverageExecutionTime
-            | KeyValue(_, (ser, deser, _)) -> ser.AverageExecutionTime + deser.AverageExecutionTime)
+            | _, (ser, null, _) -> ser.AverageExecutionTime
+            | _, (ser, deser, _) -> ser.AverageExecutionTime + deser.AverageExecutionTime)
+        |> Seq.cache
 
     printfn "-----------------------------------------------------------------------------------------------------------------------------"
     printfn "%-40s %-22s %-22s %-20s" "Name" "Serialization (ms)" "Deserialization (ms)" "Payload (bytes)"
     printfn "-----------------------------------------------------------------------------------------------------------------------------"
 
-    for (KeyValue(name, (ser, deser, payload))) in sortedResults do
+    for name, (ser, deser, payload) in sortedResults do
         printfn "%-40s %-22f %-22s %-20f" 
                 name
                 ser.AverageExecutionTime
@@ -37,15 +39,29 @@ let prettyPrint (results : Dictionary<string, ITestResultSummary * ITestResultSu
 
     printfn "-----------------------------------------------------------------------------------------------------------------------------"
 
-    let serResults   = sortedResults 
-                       |> Seq.map (function (KeyValue(name, (ser, _, _))) -> name, ser.AverageExecutionTime)
-    let deserResults = sortedResults 
-                       |> Seq.map (function (KeyValue(name, (_, deser, _))) -> match deser with | null -> name, 0.0 | x -> name, x.AverageExecutionTime)
+    let serResults =
+        sortedResults 
+        |> Seq.map (function name, (ser, _, _) -> name, ser.AverageExecutionTime)
+
+    let deserResults =
+        sortedResults 
+        |> Seq.map (function
+            | name, (_, null, _) -> name, 0.0
+            | name, (_, deser, _) -> name, deser.AverageExecutionTime
+        )
+
+    let payloadResults = 
+        sortedResults
+        |> Seq.map (function name, (_, _, payload) -> name, payload)
     
     Chart
         .Combine(
-            [ Chart.Bar(serResults, Name = "Serialization", Color = Drawing.Color.Blue)
-              Chart.Bar(deserResults, Name = "Deserialization", Color = Drawing.Color.Red) ])
+            [
+                Chart.Bar(serResults, Name = "Serialization", Color = Drawing.Color.Blue)
+                Chart.Bar(deserResults, Name = "Deserialization", Color = Drawing.Color.Red)
+                Chart.Bar(payloadResults, Name = "Payload", Color = Drawing.Color.DarkOrange)
+            ]
+        )
         .WithXAxis(Enabled = true,
                    MajorGrid = Grid(Enabled = false),
                    MajorTickMark = TickMark(Enabled = true, Interval = 1.0, IntervalOffset = 1.0,
