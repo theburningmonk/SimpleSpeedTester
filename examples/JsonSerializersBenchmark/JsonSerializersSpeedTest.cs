@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Json;
@@ -19,6 +19,7 @@ using JsonNetBsonReader = Newtonsoft.Json.Bson.BsonReader;
 using JsonNetBsonWriter = Newtonsoft.Json.Bson.BsonWriter;
 using JsonFxReader = JsonFx.Json.JsonReader;
 using JsonFxWriter = JsonFx.Json.JsonWriter;
+using SystemTextJson = System.Text.Json;
 
 namespace SimpleSpeedTester.Example
 {
@@ -104,6 +105,10 @@ namespace SimpleSpeedTester.Example
             results.Add(
                 "Jil",
                 DoSpeedTest("Jil", SerializeWithJil, DeserializeWithJil, CountAverageJsonStringPayload));
+
+            results.Add(
+                "System.Text.Json",
+                DoSpeedTest("System.Text.Json", SerializeWithJsonNet, DeserializeWithSystemTextJson, CountAverageJsonStringPayload));
 
             return results;
         }
@@ -442,6 +447,15 @@ namespace SimpleSpeedTester.Example
             return arg.Select(j =>
             {
                 return Jil.JSON.Deserialize<SimpleObject>(j);
+            }).ToList();
+        }
+
+        private static List<SimpleObject> DeserializeWithSystemTextJson(List<string> arg)
+        {
+            var parser = new SystemTextJson.JsonParser();
+            return arg.Select(j =>
+            {
+                return parser.Parse<SimpleObject>(j);
             }).ToList();
         }
 
