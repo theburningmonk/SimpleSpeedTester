@@ -9,6 +9,8 @@ using MessageShark;
 
 using MsgPack;
 
+using Nessos.FsPickler;
+
 using SimpleSpeedTester.Core;
 using SimpleSpeedTester.Core.OutcomeFilters;
 using SimpleSpeedTester.Interfaces;
@@ -66,11 +68,11 @@ namespace SimpleSpeedTester.Example
 
             // speed test binary writer (only for reference, won't be able to deserialize)
             results.Add(
-                "BinaryWriter",
+                "BinaryWriter*",
                 DoSpeedTest("BinaryWriter", SimpleObjects, SerializeWithBinaryWriter, DeserializeWithBinaryReader));
 
             results.Add(
-                "FsPickler (Simple Records)",
+                "FsPickler (F# Record)",
                 DoSpeedTest("FsPickler", SimpleRecords, SerializeWithFsPickler, DeserializeWithFsPickler<TestRecords.SimpleRecord>));
 
             results.Add(
@@ -110,7 +112,7 @@ namespace SimpleSpeedTester.Example
 
         private static List<T> DeserializeWithFsPickler<T>(List<byte[]> payloads)
         {
-            var fsp = new FsPickler.FsPickler();
+            var fsp = FsPickler.CreateBinary();
 
             return
                 payloads.Select(payload =>
@@ -124,7 +126,7 @@ namespace SimpleSpeedTester.Example
 
         private static List<byte[]> SerializeWithFsPickler<T>(List<T> objects)
         {
-            var fsp = new FsPickler.FsPickler();
+            var fsp = FsPickler.CreateBinary();
 
             return
                 objects.Select(o =>

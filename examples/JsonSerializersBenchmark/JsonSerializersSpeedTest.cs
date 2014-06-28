@@ -107,8 +107,8 @@ namespace SimpleSpeedTester.Example
                 DoSpeedTest("Jil", SerializeWithJil, DeserializeWithJil, CountAverageJsonStringPayload));
 
             results.Add(
-                "System.Text.Json",
-                DoSpeedTest("System.Text.Json", SerializeWithJsonNet, DeserializeWithSystemTextJson, CountAverageJsonStringPayload));
+                "System.Text.Json*",
+                DoSpeedTest("System.Text.Json (using Json.Net for serialization)", SerializeWithJsonNet, DeserializeWithSystemTextJson, CountAverageJsonStringPayload));
 
             return results;
         }
@@ -307,12 +307,12 @@ namespace SimpleSpeedTester.Example
         #region FastJson
 
         private static List<string> SerializeWithFastJson<T>(List<T> objects) {
-            var jsonStrings = objects.Select(o => fastJSON.JSON.Instance.ToJSON(o)).ToList();
+            var jsonStrings = objects.Select(o => fastJSON.JSON.ToJSON(o)).ToList();
             return jsonStrings;
         }
 
         private static List<T> DeserializeWithFastJson<T>(List<string> jsonStrings) {
-            var objects = jsonStrings.Select(fastJSON.JSON.Instance.ToObject<T>).ToList();
+            var objects = jsonStrings.Select(fastJSON.JSON.ToObject<T>).ToList();
             return objects;
         }
 
@@ -434,31 +434,6 @@ namespace SimpleSpeedTester.Example
 
         #region System.Json
 
-        private static List<string> SerializeWithJil(List<SimpleObject> objects)
-        {
-            return objects.Select(o =>
-            {
-                return Jil.JSON.Serialize(o);
-            }).ToList();
-        }
-
-        private static List<SimpleObject> DeserializeWithJil(List<string> arg)
-        {
-            return arg.Select(j =>
-            {
-                return Jil.JSON.Deserialize<SimpleObject>(j);
-            }).ToList();
-        }
-
-        private static List<SimpleObject> DeserializeWithSystemTextJson(List<string> arg)
-        {
-            var parser = new SystemTextJson.JsonParser();
-            return arg.Select(j =>
-            {
-                return parser.Parse<SimpleObject>(j);
-            }).ToList();
-        }
-
         private static List<string> SerializeWithSystemJson(List<SimpleObject> objects)
         {
             return objects.Select(o =>
@@ -487,6 +462,30 @@ namespace SimpleSpeedTester.Example
                     Scores = scores.Select<JsonValue, int>(s => (int)s).ToArray(),
                 };
             }).ToList();
+        }
+
+        #endregion
+
+        #region System.Text.Json
+
+        private static List<SimpleObject> DeserializeWithSystemTextJson(List<string> arg)
+        {
+            var parser = new SystemTextJson.JsonParser();
+            return arg.Select(parser.Parse<SimpleObject>).ToList();
+        }
+
+        #endregion
+
+        #region Jil
+
+        private static List<string> SerializeWithJil(List<SimpleObject> objects)
+        {
+            return objects.Select(o => Jil.JSON.Serialize(o)).ToList();
+        }
+
+        private static List<SimpleObject> DeserializeWithJil(List<string> arg)
+        {
+            return arg.Select(j => Jil.JSON.Deserialize<SimpleObject>(j)).ToList();
         }
 
         #endregion
