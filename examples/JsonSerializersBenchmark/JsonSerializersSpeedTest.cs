@@ -48,67 +48,124 @@ namespace SimpleSpeedTester.Example
 
             results.Add(
                 "Json.Net",
-                DoSpeedTest("Json.Net", SerializeWithJsonNet, DeserializeWithJsonNet<SimpleObject>, CountAverageJsonStringPayload));
+                DoSpeedTest(
+                    "Json.Net",
+                    SerializeWithJsonNet,
+                    DeserializeWithJsonNet<SimpleObject>,
+                    CountAverageJsonStringPayload));
 
             results.Add(
                 "Json.Net BSON",
-                DoSpeedTest("Json.Net BSON", SerializeWithJsonNetBson, DeserializeWithJsonNetBson<SimpleObject>, CountAverageByteArrayPayload));
-            
+                DoSpeedTest(
+                    "Json.Net BSON",
+                    SerializeWithJsonNetBson,
+                    DeserializeWithJsonNetBson<SimpleObject>,
+                    CountAverageByteArrayPayload));
+
             results.Add(
                 "Protobuf-Net",
-                DoSpeedTest("Protobuf-Net", SerializeWithProtobufNet, DeserializeWithProtobufNet<SimpleObject>, CountAverageByteArrayPayload));
+                DoSpeedTest(
+                    "Protobuf-Net",
+                    SerializeWithProtobufNet,
+                    DeserializeWithProtobufNet<SimpleObject>,
+                    CountAverageByteArrayPayload));
 
             results.Add(
                 "ServiceStack.Text",
-                DoSpeedTest("ServiceStack.Text", SerializeWithServiceStack, DeserializeWithServiceStack<SimpleObject>, CountAverageJsonStringPayload));
+                DoSpeedTest(
+                    "ServiceStack.Text",
+                    SerializeWithServiceStack,
+                    DeserializeWithServiceStack<SimpleObject>,
+                    CountAverageJsonStringPayload));
 
             results.Add(
                 "DataContractJsonSerializer",
-                DoSpeedTest("DataContractJsonSerializer", SerializeWithDataContractJsonSerializer, DeserializeWithDataContractJsonSerializer<SimpleObject>, CountAverageJsonStringPayload));
+                DoSpeedTest(
+                    "DataContractJsonSerializer",
+                    SerializeWithDataContractJsonSerializer,
+                    DeserializeWithDataContractJsonSerializer<SimpleObject>,
+                    CountAverageJsonStringPayload));
 
             results.Add(
                 "JavaScriptSerializer",
-                DoSpeedTest("JavaScriptSerializer", SerializeWithJavaScriptSerializer, DeserializeWithJavaScriptSerializer<SimpleObject>, CountAverageJsonStringPayload));
+                DoSpeedTest(
+                    "JavaScriptSerializer",
+                    SerializeWithJavaScriptSerializer,
+                    DeserializeWithJavaScriptSerializer<SimpleObject>,
+                    CountAverageJsonStringPayload));
 
             results.Add(
                 "SimpleJson",
-                DoSpeedTest("SimpleJson", SerializeWithSimpleJson, DeserializeWithSimpleJson<SimpleObject>, CountAverageJsonStringPayload));
+                DoSpeedTest(
+                    "SimpleJson",
+                    SerializeWithSimpleJson,
+                    DeserializeWithSimpleJson<SimpleObject>,
+                    CountAverageJsonStringPayload));
 
             results.Add(
                 "fastJson",
-                DoSpeedTest("fastJson", SerializeWithFastJson, DeserializeWithFastJson<SimpleObject>, CountAverageJsonStringPayload));
+                DoSpeedTest(
+                    "fastJson",
+                    SerializeWithFastJson,
+                    DeserializeWithFastJson<SimpleObject>,
+                    CountAverageJsonStringPayload));
 
             results.Add(
                 "JayRock",
-                DoSpeedTest("JayRock", SerializeWithJayRock, DeserializeWithJayRock<SimpleObject>, CountAverageJsonStringPayload));
+                DoSpeedTest(
+                    "JayRock",
+                    SerializeWithJayRock,
+                    DeserializeWithJayRock<SimpleObject>,
+                    CountAverageJsonStringPayload));
 
             results.Add(
                 "JsonFx",
-                DoSpeedTest("JsonFx", SerializeWithJsonFx, DeserializeWithJsonFx<SimpleObject>, CountAverageJsonStringPayload));
+                DoSpeedTest(
+                    "JsonFx",
+                    SerializeWithJsonFx,
+                    DeserializeWithJsonFx<SimpleObject>,
+                    CountAverageJsonStringPayload));
 
             results.Add(
                 "MongoDB Driver",
-                DoSpeedTest("MongoDB Driver", SerializeWithMongoDbDriver, DeserializeWithMongoDbDriver<SimpleObject>, CountAverageJsonStringPayload));
+                DoSpeedTest(
+                    "MongoDB Driver",
+                    SerializeWithMongoDbDriver,
+                    DeserializeWithMongoDbDriver<SimpleObject>,
+                    CountAverageJsonStringPayload));
 
             results.Add(
                 "MongoDB Driver BSON",
-                DoSpeedTest("MongoDB Driver BSON", SerializeWithMongoDbDriverBson, DeserializeWithMongoDbDriverBson<SimpleObject>, CountAverageByteArrayPayload));
+                DoSpeedTest(
+                    "MongoDB Driver BSON",
+                    SerializeWithMongoDbDriverBson,
+                    DeserializeWithMongoDbDriverBson<SimpleObject>,
+                    CountAverageByteArrayPayload));
 
             results.Add(
                 "System.Json",
-                DoSpeedTest("System.Json", SerializeWithSystemJson, DeserializeWithSystemJson, CountAverageJsonStringPayload));
-
-            //results.Add(
-            //    "XamlServices",
-            //    DoSpeedTest("XamlServices", SerializeWithXamlServices, DeserializeWithXamlServices<SimpleObject>, CountAverageJsonStringPayload));
+                DoSpeedTest(
+                    "System.Json",
+                    SerializeWithSystemJson,
+                    DeserializeWithSystemJson,
+                    CountAverageJsonStringPayload));
 
             results.Add(
                 "Jil",
-                DoSpeedTest("Jil", SerializeWithJil, DeserializeWithJil, CountAverageJsonStringPayload));
+                DoSpeedTest(
+                    "Jil",
+                    SerializeWithJil,
+                    DeserializeWithJil,
+                    CountAverageJsonStringPayload));
 
             results.Add(
-                "System.Text.Json*",
-                DoSpeedTest("System.Text.Json (using Json.Net for serialization)", SerializeWithJsonNet, DeserializeWithSystemTextJson, CountAverageJsonStringPayload));
+                "System.Text.Json",
+                DoSpeedTest(
+                    "System.Text.Json",
+                    SerializeWithJsonNet, 
+                    DeserializeWithSystemTextJson, 
+                    CountAverageJsonStringPayload,
+                    ignoreSerializationResult: true));
 
             return results;
         }
@@ -117,7 +174,9 @@ namespace SimpleSpeedTester.Example
             string testGroupName, 
             Func<List<SimpleObject>, List<T>> serializeFunc, 
             Func<List<T>, List<SimpleObject>> deserializeFunc,
-            Func<List<T>, double> getAvgPayload)
+            Func<List<T>, double> getAvgPayload,
+            bool ignoreSerializationResult = false,
+            bool ignoreDeserializationResult = false)
         {
             var data = new List<T>();
 
@@ -145,7 +204,10 @@ namespace SimpleSpeedTester.Example
 
             Console.WriteLine("---------------------------------------------------------\n\n");
 
-            return Tuple.Create(serializationTestSummary, deserializationTestSummary, avgPayload);
+            return Tuple.Create(
+                ignoreSerializationResult ? null : serializationTestSummary, 
+                ignoreDeserializationResult ? null : deserializationTestSummary, 
+                avgPayload);
         }
 
         private static SimpleObject GetSimpleObject(int id)
@@ -467,6 +529,12 @@ namespace SimpleSpeedTester.Example
         #endregion
 
         #region System.Text.Json
+
+        private static List<string> SerializeWithSystemTextJson(List<SimpleObject> objects)
+        {
+            var writer = SystemTextJson.JsonWriter.GetWriter<SimpleObject>();
+            return objects.Select(writer.Write).ToList();
+        }
 
         private static List<SimpleObject> DeserializeWithSystemTextJson(List<string> arg)
         {

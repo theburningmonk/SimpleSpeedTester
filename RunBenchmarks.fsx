@@ -22,8 +22,9 @@ let prettyPrint (results : Dictionary<string, ITestResultSummary * ITestResultSu
         results
         |> Seq.map (|KeyValue|)
         |> Seq.sortBy (function 
-            | _, (ser, null, _) -> ser.AverageExecutionTime
-            | _, (ser, deser, _) -> ser.AverageExecutionTime + deser.AverageExecutionTime)
+            | _, (null, deser, _) -> deser.AverageExecutionTime
+            | _, (ser, null, _)   -> ser.AverageExecutionTime
+            | _, (ser, deser, _)  -> (ser.AverageExecutionTime + deser.AverageExecutionTime) / 2.0)
         |> Seq.cache
 
     printfn "-----------------------------------------------------------------------------------------------------------------------------"
@@ -31,9 +32,9 @@ let prettyPrint (results : Dictionary<string, ITestResultSummary * ITestResultSu
     printfn "-----------------------------------------------------------------------------------------------------------------------------"
 
     for name, (ser, deser, payload) in sortedResults do
-        printfn "%-40s %-22f %-22s %-20f" 
+        printfn "%-40s %-22s %-22s %-20f" 
                 name
-                ser.AverageExecutionTime
+                (match ser with   | null -> "n/a" | x -> x.AverageExecutionTime.ToString())
                 (match deser with | null -> "n/a" | x -> x.AverageExecutionTime.ToString())
                 payload
 
@@ -41,7 +42,9 @@ let prettyPrint (results : Dictionary<string, ITestResultSummary * ITestResultSu
 
     let serResults =
         sortedResults 
-        |> Seq.map (function name, (ser, _, _) -> name, ser.AverageExecutionTime)
+        |> Seq.map (function 
+            | name, (null, _, _) -> name, 0.0
+            | name, (ser, _, _)  -> name, ser.AverageExecutionTime)
 
     let deserResults =
         sortedResults 
