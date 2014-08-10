@@ -23,6 +23,8 @@ using SystemTextJson = System.Text.Json;
 
 namespace SimpleSpeedTester.Example
 {
+    using NetJSON;
+
     /// <summary>
     /// Demo program which compares the serializatoin and deserialization speed of 4 popular JSON serializers
     /// </summary>
@@ -156,6 +158,14 @@ namespace SimpleSpeedTester.Example
                     "Jil",
                     SerializeWithJil,
                     DeserializeWithJil,
+                    CountAverageJsonStringPayload));
+
+            results.Add(
+                "NetJson",
+                DoSpeedTest(
+                    "NetJson",
+                    SerializeWithNetJson,
+                    DeserializeWithNetJson,
                     CountAverageJsonStringPayload));
 
             results.Add(
@@ -554,6 +564,20 @@ namespace SimpleSpeedTester.Example
         private static List<SimpleObject> DeserializeWithJil(List<string> arg)
         {
             return arg.Select(j => Jil.JSON.Deserialize<SimpleObject>(j)).ToList();
+        }
+
+        #endregion
+
+        #region NetJson
+
+        private static List<string> SerializeWithNetJson(List<SimpleObject> objects)
+        {
+            return objects.Select(NetJSON.Serialize).ToList();
+        }
+
+        private static List<SimpleObject> DeserializeWithNetJson(List<string> arg)
+        {
+            return arg.Select(NetJSON.Deserialize<SimpleObject>).ToList();
         }
 
         #endregion
