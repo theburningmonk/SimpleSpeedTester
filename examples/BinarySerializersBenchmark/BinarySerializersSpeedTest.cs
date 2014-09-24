@@ -71,7 +71,7 @@ namespace SimpleSpeedTester.Example
                     DeserializeWithBinaryFormatter<IserializableSimpleObject>));
 
             results.Add(
-                "Protobuf-Net (with properties)",
+                "Protobuf-Net (with properties) v2.0.0.668",
                 DoSpeedTest(
                     "Protobuf-Net (with properties)", 
                     SimpleObjects, 
@@ -79,7 +79,7 @@ namespace SimpleSpeedTester.Example
                     DeserializeWithProtobufNet<SimpleObject>));
 
             results.Add(
-                "Protobuf-Net (with fields)",
+                "Protobuf-Net (with fields) v2.0.0.668",
                 DoSpeedTest(
                     "Protobuf-Net (with fields)", 
                     SimpleObjectsWithFields, 
@@ -97,7 +97,7 @@ namespace SimpleSpeedTester.Example
                     ignoreDeserializationResult: true));
 
             results.Add(
-                "FsPickler (F# records)",
+                "FsPickler (F# records) v0.9.11",
                 DoSpeedTest(
                     "FsPickler", 
                     SimpleRecords, 
@@ -105,7 +105,7 @@ namespace SimpleSpeedTester.Example
                     DeserializeWithFsPickler<TestRecords.SimpleRecord>));
 
             results.Add(
-                "MessagePack (with properties)",
+                "MessagePack (with properties) v0.1.0.2011042300",
                 DoSpeedTest(
                     "MessagePack (with properties)",
                     SimpleObjects,
@@ -113,7 +113,7 @@ namespace SimpleSpeedTester.Example
                     lst => DeserializeWithMessagePack<SimpleObject>(lst, true)));
 
             results.Add(
-                "MessagePack (with fields)",
+                "MessagePack (with fields) v0.1.0.2011042300",
                 DoSpeedTest(
                     "MessagePack (with fields)",
                     SimpleObjectsWithFields,
@@ -129,7 +129,7 @@ namespace SimpleSpeedTester.Example
                     DeserializeWithMessageShark<SimpleObject>));
 
             results.Add(
-                "FluorineFx",
+                "FluorineFx v1.2.4",
                 DoSpeedTest(
                     "FluorineFx", 
                     SimpleObjects, 
@@ -137,7 +137,7 @@ namespace SimpleSpeedTester.Example
                     DeserializeWithFluorineFx<SimpleObject>));
 
             results.Add(
-                "Filbert",
+                "Filbert v0.2.0",
                 DoSpeedTest(
                     "Filbert", 
                     BertSimpleObjects, 
@@ -145,7 +145,7 @@ namespace SimpleSpeedTester.Example
                     DeserializeWithFilbert));
 
             results.Add(
-                "Json.Net BSON",
+                "Json.Net BSON v6.0.5",
                 DoSpeedTest(
                     "Json.Net BSON", 
                     SimpleObjects, 

@@ -8,6 +8,9 @@ using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Web.Script.Serialization;
 using System.Xaml;
+
+using Microsoft.FSharp.Core;
+
 using MongoDB.Bson;
 using SimpleSpeedTester.Core;
 using SimpleSpeedTester.Core.OutcomeFilters;
@@ -20,6 +23,7 @@ using JsonNetBsonWriter = Newtonsoft.Json.Bson.BsonWriter;
 using JsonFxReader = JsonFx.Json.JsonReader;
 using JsonFxWriter = JsonFx.Json.JsonWriter;
 using SystemTextJson = System.Text.Json;
+using Nessos.FsPickler.Json;
 
 namespace SimpleSpeedTester.Example
 {
@@ -49,7 +53,7 @@ namespace SimpleSpeedTester.Example
             var results = new Dictionary<string, Tuple<ITestResultSummary, ITestResultSummary, double>>();
 
             results.Add(
-                "Json.Net",
+                "Json.Net v6.0.5",
                 DoSpeedTest(
                     "Json.Net",
                     SerializeWithJsonNet,
@@ -57,7 +61,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageJsonStringPayload));
 
             results.Add(
-                "Json.Net BSON",
+                "Json.Net BSON v6.0.5",
                 DoSpeedTest(
                     "Json.Net BSON",
                     SerializeWithJsonNetBson,
@@ -65,7 +69,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageByteArrayPayload));
 
             results.Add(
-                "Protobuf-Net",
+                "Protobuf-Net v2.0.0.668",
                 DoSpeedTest(
                     "Protobuf-Net",
                     SerializeWithProtobufNet,
@@ -73,7 +77,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageByteArrayPayload));
 
             results.Add(
-                "ServiceStack.Text",
+                "ServiceStack.Text v4.0.31",
                 DoSpeedTest(
                     "ServiceStack.Text",
                     SerializeWithServiceStack,
@@ -105,7 +109,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageJsonStringPayload));
 
             results.Add(
-                "fastJson",
+                "fastJson v2.1.3.0",
                 DoSpeedTest(
                     "fastJson",
                     SerializeWithFastJson,
@@ -113,7 +117,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageJsonStringPayload));
 
             results.Add(
-                "JayRock",
+                "JayRock v0.9.16530",
                 DoSpeedTest(
                     "JayRock",
                     SerializeWithJayRock,
@@ -121,7 +125,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageJsonStringPayload));
 
             results.Add(
-                "JsonFx",
+                "JsonFx v2.0.1209.2802",
                 DoSpeedTest(
                     "JsonFx",
                     SerializeWithJsonFx,
@@ -129,7 +133,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageJsonStringPayload));
 
             results.Add(
-                "MongoDB Driver",
+                "MongoDB Driver v1.9.2",
                 DoSpeedTest(
                     "MongoDB Driver",
                     SerializeWithMongoDbDriver,
@@ -137,7 +141,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageJsonStringPayload));
 
             results.Add(
-                "MongoDB Driver BSON",
+                "MongoDB Driver BSON v1.9.2",
                 DoSpeedTest(
                     "MongoDB Driver BSON",
                     SerializeWithMongoDbDriverBson,
@@ -145,7 +149,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageByteArrayPayload));
 
             results.Add(
-                "System.Json",
+                "System.Json v4.0.20126.16343",
                 DoSpeedTest(
                     "System.Json",
                     SerializeWithSystemJson,
@@ -153,7 +157,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageJsonStringPayload));
 
             results.Add(
-                "Jil",
+                "Jil v2.1.0",
                 DoSpeedTest(
                     "Jil",
                     SerializeWithJil,
@@ -161,7 +165,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageJsonStringPayload));
 
             results.Add(
-                "NetJson",
+                "NetJson v1.0.4.1",
                 DoSpeedTest(
                     "NetJson",
                     SerializeWithNetJson,
@@ -169,13 +173,21 @@ namespace SimpleSpeedTester.Example
                     CountAverageJsonStringPayload));
 
             results.Add(
-                "System.Text.Json",
+                "System.Text.Json v1.9.9.1",
                 DoSpeedTest(
                     "System.Text.Json",
                     SerializeWithJsonNet, 
                     DeserializeWithSystemTextJson, 
                     CountAverageJsonStringPayload,
                     ignoreSerializationResult: true));
+
+            results.Add(
+                "FsPickler.Json v0.9.11",
+                DoSpeedTest(
+                    "FsPickler.Json",
+                    SerializeWithFsPickler, 
+                    DeserializeWithFsPickler, 
+                    CountAverageJsonStringPayload));
 
             return results;
         }
@@ -578,6 +590,26 @@ namespace SimpleSpeedTester.Example
         private static List<SimpleObject> DeserializeWithNetJson(List<string> arg)
         {
             return arg.Select(NetJSON.Deserialize<SimpleObject>).ToList();
+        }
+
+        #endregion
+
+        #region FsPickler
+
+        private static List<string> SerializeWithFsPickler(List<SimpleObject> objects)
+        {
+            var json = FsPickler.CreateJson();
+            return objects
+                    .Select(obj => json.PickleToString(obj, FSharpOption<StreamingContext>.None))
+                    .ToList();
+        }
+
+        private static List<SimpleObject> DeserializeWithFsPickler(List<string> arg)
+        {
+            var json = FsPickler.CreateJson();
+            return arg
+                    .Select(j => json.UnPickleOfString<SimpleObject>(j, FSharpOption<StreamingContext>.None))
+                    .ToList();
         }
 
         #endregion
