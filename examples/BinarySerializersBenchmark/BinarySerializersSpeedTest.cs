@@ -46,7 +46,7 @@ namespace SimpleSpeedTester.Example
             var results = new Dictionary<string, Tuple<ITestResultSummary, ITestResultSummary, double>>();
 
             results.Add(
-                "BinaryFormatter (with properties)",
+                "BinaryFormatter (properties)",
                 DoSpeedTest(
                     "BinaryFormatter (with properties)", 
                     SimpleObjects, 
@@ -54,7 +54,7 @@ namespace SimpleSpeedTester.Example
                     DeserializeWithBinaryFormatter<SimpleObject>));
 
             results.Add(
-                "BinaryFormatter (with fields)",
+                "BinaryFormatter (fields)",
                 DoSpeedTest(
                     "BinaryFormatter (with fields)", 
                     SimpleObjectsWithFields, 
@@ -63,7 +63,7 @@ namespace SimpleSpeedTester.Example
 
             // speed test binary formatter when used with an ISerializable type            
             results.Add(
-                "BinaryFormatter (with ISerializable)",
+                "BinaryFormatter (ISerializable)",
                 DoSpeedTest(
                     "BinaryFormatter (with ISerializable)", 
                     IserializableSimpleObjects, 
@@ -71,7 +71,7 @@ namespace SimpleSpeedTester.Example
                     DeserializeWithBinaryFormatter<IserializableSimpleObject>));
 
             results.Add(
-                "Protobuf-Net (with properties) v2.0.0.668",
+                "Protobuf-Net (properties) v2.0.0.668",
                 DoSpeedTest(
                     "Protobuf-Net (with properties)", 
                     SimpleObjects, 
@@ -79,7 +79,7 @@ namespace SimpleSpeedTester.Example
                     DeserializeWithProtobufNet<SimpleObject>));
 
             results.Add(
-                "Protobuf-Net (with fields) v2.0.0.668",
+                "Protobuf-Net (fields) v2.0.0.668",
                 DoSpeedTest(
                     "Protobuf-Net (with fields)", 
                     SimpleObjectsWithFields, 
@@ -105,7 +105,7 @@ namespace SimpleSpeedTester.Example
                     DeserializeWithFsPickler<TestRecords.SimpleRecord>));
 
             results.Add(
-                "MessagePack (with properties) v0.1.0.2011042300",
+                "MessagePack (properties) v0.1.0",
                 DoSpeedTest(
                     "MessagePack (with properties)",
                     SimpleObjects,
@@ -113,7 +113,7 @@ namespace SimpleSpeedTester.Example
                     lst => DeserializeWithMessagePack<SimpleObject>(lst, true)));
 
             results.Add(
-                "MessagePack (with fields) v0.1.0.2011042300",
+                "MessagePack (fields) v0.1.0",
                 DoSpeedTest(
                     "MessagePack (with fields)",
                     SimpleObjectsWithFields,
@@ -121,7 +121,7 @@ namespace SimpleSpeedTester.Example
                     lst => DeserializeWithMessagePack<SimpleObjectWithFields>(lst, false)));
 
             results.Add(
-                "MessageShark (with properties)",
+                "MessageShark (properties)",
                 DoSpeedTest(
                     "MessageShark (with properties)", 
                     SimpleObjects, 
