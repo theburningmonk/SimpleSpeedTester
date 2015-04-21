@@ -53,7 +53,7 @@ namespace SimpleSpeedTester.Example
             var results = new Dictionary<string, Tuple<ITestResultSummary, ITestResultSummary, double>>();
 
             results.Add(
-                "Json.Net v6.0.5",
+                "Json.Net v6.0.8",
                 DoSpeedTest(
                     "Json.Net",
                     SerializeWithJsonNet,
@@ -61,7 +61,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageJsonStringPayload));
 
             results.Add(
-                "Json.Net BSON v6.0.5",
+                "Json.Net BSON v6.0.8",
                 DoSpeedTest(
                     "Json.Net BSON",
                     SerializeWithJsonNetBson,
@@ -77,7 +77,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageByteArrayPayload));
 
             results.Add(
-                "ServiceStack.Text v4.0.31",
+                "ServiceStack.Text v4.0.38",
                 DoSpeedTest(
                     "ServiceStack.Text",
                     SerializeWithServiceStack,
@@ -109,7 +109,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageJsonStringPayload));
 
             results.Add(
-                "fastJson v2.1.3.0",
+                "fastJson v2.1.11.0",
                 DoSpeedTest(
                     "fastJson",
                     SerializeWithFastJson,
@@ -133,7 +133,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageJsonStringPayload));
 
             results.Add(
-                "MongoDB Driver v1.9.2",
+                "MongoDB Driver v2.0.0",
                 DoSpeedTest(
                     "MongoDB Driver",
                     SerializeWithMongoDbDriver,
@@ -141,7 +141,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageJsonStringPayload));
 
             results.Add(
-                "MongoDB Driver BSON v1.9.2",
+                "MongoDB Driver BSON v2.0.0",
                 DoSpeedTest(
                     "MongoDB Driver BSON",
                     SerializeWithMongoDbDriverBson,
@@ -157,7 +157,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageJsonStringPayload));
 
             results.Add(
-                "Jil v2.1.0",
+                "Jil v2.9.0",
                 DoSpeedTest(
                     "Jil",
                     SerializeWithJil,
@@ -165,7 +165,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageJsonStringPayload));
 
             results.Add(
-                "NetJson v1.0.4.1",
+                "NetJson v1.0.7",
                 DoSpeedTest(
                     "NetJson",
                     SerializeWithNetJson,
@@ -173,7 +173,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageJsonStringPayload));
 
             results.Add(
-                "System.Text.Json v1.9.9.1",
+                "System.Text.Json v2.0.0.6",
                 DoSpeedTest(
                     "System.Text.Json",
                     SerializeWithJsonNet, 
@@ -182,7 +182,7 @@ namespace SimpleSpeedTester.Example
                     ignoreSerializationResult: true));
 
             results.Add(
-                "FsPickler.Json v0.9.11",
+                "FsPickler.Json v1.0.16",
                 DoSpeedTest(
                     "FsPickler.Json",
                     SerializeWithFsPickler, 
@@ -447,7 +447,9 @@ namespace SimpleSpeedTester.Example
 
         private static List<T> DeserializeWithMongoDbDriver<T>(List<string> jsonStrings)
         {
-            return jsonStrings.Select(MongoDB.Bson.Serialization.BsonSerializer.Deserialize<T>).ToList();
+            return jsonStrings
+                    .Select(str => MongoDB.Bson.Serialization.BsonSerializer.Deserialize<T>(str))
+                    .ToList();
         }
 
         private static List<byte[]> SerializeWithMongoDbDriverBson<T>(List<T> objects)
@@ -457,7 +459,9 @@ namespace SimpleSpeedTester.Example
 
         private static List<T> DeserializeWithMongoDbDriverBson<T>(List<byte[]> byteArrays)
         {
-            return byteArrays.Select(MongoDB.Bson.Serialization.BsonSerializer.Deserialize<T>).ToList();
+            return byteArrays
+                    .Select(bin => MongoDB.Bson.Serialization.BsonSerializer.Deserialize<T>(bin))
+                    .ToList();
         }
 
         #endregion

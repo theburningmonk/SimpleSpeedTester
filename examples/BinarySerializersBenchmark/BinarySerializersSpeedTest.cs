@@ -97,7 +97,7 @@ namespace SimpleSpeedTester.Example
                     ignoreDeserializationResult: true));
 
             results.Add(
-                "FsPickler (F# records) v0.9.11",
+                "FsPickler (F# records) v1.0.16",
                 DoSpeedTest(
                     "FsPickler", 
                     SimpleRecords, 
@@ -145,7 +145,7 @@ namespace SimpleSpeedTester.Example
                     DeserializeWithFilbert));
 
             results.Add(
-                "Json.Net BSON v6.0.5",
+                "Json.Net BSON v6.0.8",
                 DoSpeedTest(
                     "Json.Net BSON", 
                     SimpleObjects, 
