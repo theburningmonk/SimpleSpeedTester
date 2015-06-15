@@ -97,7 +97,7 @@ namespace SimpleSpeedTester.Example
                     ignoreDeserializationResult: true));
 
             results.Add(
-                "FsPickler (F# records) v1.0.16",
+                "FsPickler (F# records) v1.2.9",
                 DoSpeedTest(
                     "FsPickler", 
                     SimpleRecords, 

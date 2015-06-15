@@ -9,8 +9,6 @@ using System.Text;
 using System.Web.Script.Serialization;
 using System.Xaml;
 
-using Microsoft.FSharp.Core;
-
 using MongoDB.Bson;
 using SimpleSpeedTester.Core;
 using SimpleSpeedTester.Core.OutcomeFilters;
@@ -77,7 +75,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageByteArrayPayload));
 
             results.Add(
-                "ServiceStack.Text v4.0.38",
+                "ServiceStack.Text v4.0.40",
                 DoSpeedTest(
                     "ServiceStack.Text",
                     SerializeWithServiceStack,
@@ -109,31 +107,31 @@ namespace SimpleSpeedTester.Example
                     CountAverageJsonStringPayload));
 
             results.Add(
-                "fastJson v2.1.11.0",
+                "fastJson v2.1.14.0",
                 DoSpeedTest(
                     "fastJson",
                     SerializeWithFastJson,
                     DeserializeWithFastJson<SimpleObject>,
                     CountAverageJsonStringPayload));
 
-            results.Add(
-                "JayRock v0.9.16530",
-                DoSpeedTest(
-                    "JayRock",
-                    SerializeWithJayRock,
-                    DeserializeWithJayRock<SimpleObject>,
-                    CountAverageJsonStringPayload));
+            //results.Add(
+            //    "JayRock v0.9.16530",
+            //    DoSpeedTest(
+            //        "JayRock",
+            //        SerializeWithJayRock,
+            //        DeserializeWithJayRock<SimpleObject>,
+            //        CountAverageJsonStringPayload));
+
+            //results.Add(
+            //    "JsonFx v2.0.1209.2802",
+            //    DoSpeedTest(
+            //        "JsonFx",
+            //        SerializeWithJsonFx,
+            //        DeserializeWithJsonFx<SimpleObject>,
+            //        CountAverageJsonStringPayload));
 
             results.Add(
-                "JsonFx v2.0.1209.2802",
-                DoSpeedTest(
-                    "JsonFx",
-                    SerializeWithJsonFx,
-                    DeserializeWithJsonFx<SimpleObject>,
-                    CountAverageJsonStringPayload));
-
-            results.Add(
-                "MongoDB Driver v2.0.0",
+                "MongoDB Driver v2.0.1",
                 DoSpeedTest(
                     "MongoDB Driver",
                     SerializeWithMongoDbDriver,
@@ -141,7 +139,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageJsonStringPayload));
 
             results.Add(
-                "MongoDB Driver BSON v2.0.0",
+                "MongoDB Driver BSON v2.0.1",
                 DoSpeedTest(
                     "MongoDB Driver BSON",
                     SerializeWithMongoDbDriverBson,
@@ -157,7 +155,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageJsonStringPayload));
 
             results.Add(
-                "Jil v2.9.0",
+                "Jil v2.10.0",
                 DoSpeedTest(
                     "Jil",
                     SerializeWithJil,
@@ -173,7 +171,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageJsonStringPayload));
 
             results.Add(
-                "System.Text.Json v2.0.0.6",
+                "System.Text.Json v2.0.0.11",
                 DoSpeedTest(
                     "System.Text.Json",
                     SerializeWithJsonNet, 
@@ -182,7 +180,7 @@ namespace SimpleSpeedTester.Example
                     ignoreSerializationResult: true));
 
             results.Add(
-                "FsPickler.Json v1.0.16",
+                "FsPickler.Json v1.2.9",
                 DoSpeedTest(
                     "FsPickler.Json",
                     SerializeWithFsPickler, 
@@ -604,7 +602,7 @@ namespace SimpleSpeedTester.Example
         {
             var json = FsPickler.CreateJson();
             return objects
-                    .Select(obj => json.PickleToString(obj, FSharpOption<StreamingContext>.None))
+                    .Select(obj => json.PickleToString(obj))
                     .ToList();
         }
 
@@ -612,7 +610,7 @@ namespace SimpleSpeedTester.Example
         {
             var json = FsPickler.CreateJson();
             return arg
-                    .Select(j => json.UnPickleOfString<SimpleObject>(j, FSharpOption<StreamingContext>.None))
+                    .Select(j => json.UnPickleOfString<SimpleObject>(j))
                     .ToList();
         }
 

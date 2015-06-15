@@ -38,38 +38,39 @@
   <ItemGroup>
     <Reference Include="fastjson, Version=2.1.0.0, Culture=neutral, PublicKeyToken=6b75a806b86095cd, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\fastJSON.2.1.11.0\lib\net40\fastjson.dll</HintPath>
+      <HintPath>..\..\packages\fastJSON.2.1.14.0\lib\net40\fastjson.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="FsPickler, Version=1.0.16.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="FsPickler, Version=1.2.9.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\FsPickler.1.0.16\lib\net45\FsPickler.dll</HintPath>
+      <HintPath>..\..\packages\FsPickler.1.2.9\lib\net45\FsPickler.dll</HintPath>
     </Reference>
-    <Reference Include="FsPickler.Json, Version=1.0.16.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="FsPickler.Json, Version=1.2.9.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\FsPickler.Json.1.0.16\lib\net45\FsPickler.Json.dll</HintPath>
+      <HintPath>..\..\packages\FsPickler.Json.1.2.9\lib\net45\FsPickler.Json.dll</HintPath>
     </Reference>
     <Reference Include="Jayrock.Json, Version=0.9.16530.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\jayrock-json.0.9.16530.1\lib\net40\Jayrock.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Jil, Version=2.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Jil, Version=2.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Jil.2.9.0\lib\net45\Jil.dll</HintPath>
+      <HintPath>..\..\packages\Jil.2.10.0\lib\net45\Jil.dll</HintPath>
     </Reference>
     <Reference Include="JsonFx">
       <HintPath>..\..\packages\JsonFx.2.0.1209.2802\lib\net40\JsonFx.dll</HintPath>
     </Reference>
-    <Reference Include="MongoDB.Bson, Version=2.0.0.828, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MongoDB.Bson, Version=2.0.1.27, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\MongoDB.Bson.2.0.0\lib\net45\MongoDB.Bson.dll</HintPath>
+      <HintPath>..\..\packages\MongoDB.Bson.2.0.1\lib\net45\MongoDB.Bson.dll</HintPath>
     </Reference>
-    <Reference Include="MongoDB.Driver, Version=2.0.0.828, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="MongoDB.Driver, Version=2.0.1.27, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\MongoDB.Driver.2.0.0\lib\net45\MongoDB.Driver.dll</HintPath>
+      <HintPath>..\..\packages\MongoDB.Driver.2.0.1\lib\net45\MongoDB.Driver.dll</HintPath>
     </Reference>
-    <Reference Include="MongoDB.Driver.Core">
-      <HintPath>..\..\packages\MongoDB.Driver.Core.2.0.0\lib\net45\MongoDB.Driver.Core.dll</HintPath>
+    <Reference Include="MongoDB.Driver.Core, Version=2.0.1.27, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\MongoDB.Driver.Core.2.0.1\lib\net45\MongoDB.Driver.Core.dll</HintPath>
     </Reference>
     <Reference Include="NetJSON, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -82,9 +83,9 @@
     <Reference Include="protobuf-net">
       <HintPath>..\..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Text, Version=4.0.38.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="ServiceStack.Text, Version=4.0.40.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\ServiceStack.Text.4.0.38\lib\net40\ServiceStack.Text.dll</HintPath>
+      <HintPath>..\..\packages\ServiceStack.Text.4.0.40\lib\net40\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="Sigil, Version=4.4.0.0, Culture=neutral, PublicKeyToken=2d06c3494341c8ab, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -96,9 +97,9 @@
       <HintPath>..\..\packages\System.Json.4.0.20126.16343\lib\net40\System.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Text.Json, Version=2.0.0.6, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="System.Text.Json, Version=2.0.0.11, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\System.Text.Json.2.0.0.6\lib\net40\System.Text.Json.dll</HintPath>
+      <HintPath>..\..\packages\System.Text.Json.2.0.0.11\lib\net40\System.Text.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xaml" />
