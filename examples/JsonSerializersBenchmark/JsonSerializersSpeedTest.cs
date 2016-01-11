@@ -22,6 +22,7 @@ using JsonFxReader = JsonFx.Json.JsonReader;
 using JsonFxWriter = JsonFx.Json.JsonWriter;
 using SystemTextJson = System.Text.Json;
 using Nessos.FsPickler.Json;
+using Newtonsoft.Json;
 
 namespace SimpleSpeedTester.Example
 {
@@ -51,20 +52,20 @@ namespace SimpleSpeedTester.Example
             var results = new Dictionary<string, Tuple<ITestResultSummary, ITestResultSummary, double>>();
 
             results.Add(
-                "Json.Net v6.0.8",
-                DoSpeedTest(
-                    "Json.Net",
-                    SerializeWithJsonNet,
-                    DeserializeWithJsonNet<SimpleObject>,
-                    CountAverageJsonStringPayload));
-
-            results.Add(
-                "Json.Net BSON v6.0.8",
+                "Json.Net BSON v8.0.2",
                 DoSpeedTest(
                     "Json.Net BSON",
                     SerializeWithJsonNetBson,
                     DeserializeWithJsonNetBson<SimpleObject>,
                     CountAverageByteArrayPayload));
+
+            results.Add(
+                "Json.Net v8.0.2",
+                DoSpeedTest(
+                    "Json.Net",
+                    SerializeWithJsonNet,
+                    DeserializeWithJsonNet<SimpleObject>,
+                    CountAverageJsonStringPayload));
 
             results.Add(
                 "Protobuf-Net v2.0.0.668",
@@ -304,16 +305,39 @@ namespace SimpleSpeedTester.Example
 
         #region Json.Net
 
+        // store statically to avoid closure
+        private static readonly JsonNetJsonSerializer JsonNetJsonSerializer = new JsonNetJsonSerializer();
+
         private static List<string> SerializeWithJsonNet<T>(List<T> objects)
         {
-            var jsonStrings = objects.Select(o => JsonNetJsonConvert.SerializeObject(o)).ToList();
+            var jsonStrings = objects.Select(SerializeWithJsonNet).ToList();
             return jsonStrings;
+        }
+
+        private static string SerializeWithJsonNet<T>(T obj)
+        {
+            using (var textWriter = new StringWriter())
+            {
+                var writer = new JsonTextWriter(textWriter);
+                JsonNetJsonSerializer.Serialize(writer, obj);
+
+                return textWriter.ToString();
+            }
         }
 
         private static List<T> DeserializeWithJsonNet<T>(List<string> jsonStrings)
         {
-            var objects = jsonStrings.Select(JsonNetJsonConvert.DeserializeObject<T>).ToList();
+            var objects = jsonStrings.Select(DeserializeWithJsonNet<T>).ToList();
             return objects;
+        }
+
+        private static T DeserializeWithJsonNet<T>(string json)
+        {
+            using (var textReader = new StringReader(json))
+            {
+                var reader = new JsonTextReader(textReader);
+                return JsonNetJsonSerializer.Deserialize<T>(reader);
+            }
         }
 
         private static List<byte[]> SerializeWithJsonNetBson<T>(List<T> objects)

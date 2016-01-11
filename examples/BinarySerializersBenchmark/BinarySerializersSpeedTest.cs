@@ -145,7 +145,7 @@ namespace SimpleSpeedTester.Example
                     DeserializeWithFilbert));
 
             results.Add(
-                "Json.Net BSON v6.0.8",
+                "Json.Net BSON v8.0.2",
                 DoSpeedTest(
                     "Json.Net BSON", 
                     SimpleObjects, 
