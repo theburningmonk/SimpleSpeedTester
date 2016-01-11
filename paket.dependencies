@@ -17,7 +17,7 @@ nuget JsonFx
 nuget MongoDB.Bson
 nuget NetJson
 nuget Newtonsoft.json
-nuget ServiceStack.Text 4.0.40
+nuget ServiceStack.Text
 nuget System.Json
 nuget System.Text.Json
 

@@ -75,7 +75,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageByteArrayPayload));
 
             results.Add(
-                "ServiceStack.Text v4.0.40",
+                "ServiceStack.Text v4.0.50",
                 DoSpeedTest(
                     "ServiceStack.Text",
                     SerializeWithServiceStack,
@@ -131,7 +131,7 @@ namespace SimpleSpeedTester.Example
             //        CountAverageJsonStringPayload));
 
             results.Add(
-                "MongoDB Driver v2.0.1",
+                "MongoDB Driver v2.2.1",
                 DoSpeedTest(
                     "MongoDB Driver",
                     SerializeWithMongoDbDriver,
@@ -139,7 +139,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageJsonStringPayload));
 
             results.Add(
-                "MongoDB Driver BSON v2.0.1",
+                "MongoDB Driver BSON v2.2.1",
                 DoSpeedTest(
                     "MongoDB Driver BSON",
                     SerializeWithMongoDbDriverBson,
@@ -155,7 +155,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageJsonStringPayload));
 
             results.Add(
-                "Jil v2.10.0",
+                "Jil v2.12.1",
                 DoSpeedTest(
                     "Jil",
                     SerializeWithJil,
@@ -163,7 +163,7 @@ namespace SimpleSpeedTester.Example
                     CountAverageJsonStringPayload));
 
             results.Add(
-                "NetJson v1.0.7",
+                "NetJson v1.0.15.5",
                 DoSpeedTest(
                     "NetJson",
                     SerializeWithNetJson,
@@ -180,7 +180,7 @@ namespace SimpleSpeedTester.Example
                     ignoreSerializationResult: true));
 
             results.Add(
-                "FsPickler.Json v1.2.9",
+                "FsPickler.Json v1.7.1",
                 DoSpeedTest(
                     "FsPickler.Json",
                     SerializeWithFsPickler, 

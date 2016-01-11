@@ -55,7 +55,7 @@ NUGET
     MongoDB.Bson (2.2.1)
     NetJSON (1.0.15.5)
     Newtonsoft.Json (8.0.2)
-    ServiceStack.Text (4.0.40)
+    ServiceStack.Text (4.0.50)
     Sigil (4.5.1)
       Microsoft.CSharp (>= 4.0.1-beta-23516) - framework: dnxcore50
       System.Collections (>= 4.0.11-beta-23516) - framework: dnxcore50
