@@ -1,16 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E8ED0C5C-C3B1-4A75-B4F6-7933657B347F}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-		.nuget\packages.config = .nuget\packages.config
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "project", "project", "{7A66622C-5F9A-45FE-A81E-8519DAC031FD}"
 	ProjectSection(SolutionItems) = preProject
 		build.fsx = build.fsx
@@ -36,6 +28,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CollectionBenchmark", "examples\CollectionBenchmark\CollectionBenchmark.csproj", "{94F57EB2-21B7-42B3-A885-B2DE5EE74A10}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "TestRecord", "examples\TestRecord\TestRecord.fsproj", "{088C6FFB-7156-4172-96D8-32111C602067}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{B63C2F2F-2E55-4110-B181-FEF784BF8C5C}"
+	ProjectSection(SolutionItems) = preProject
+		paket.dependencies = paket.dependencies
+		paket.lock = paket.lock
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

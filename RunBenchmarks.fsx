@@ -1,7 +1,7 @@
-﻿#I "examples/BinarySerializersBenchmark/bin/Release"
-#I "examples/JsonSerializersBenchmark/bin/Release"
-#I "examples/CollectionBenchmark/bin/Release"
-#load "packages/FSharp.Charting.0.90.5/FSharp.Charting.fsx"
+﻿#I "examples/BinarySerializersBenchmark/bin"
+#I "examples/JsonSerializersBenchmark/bin"
+#I "examples/CollectionBenchmark/bin"
+#load "packages/FSharp.Charting/FSharp.Charting.fsx"
 
 #r "SimpleSpeedTester.dll"
 #r "BinarySerializersBenchmark.dll"
@@ -77,6 +77,8 @@ let prettyPrint (results : Dictionary<string, ITestResultSummary * ITestResultSu
                    LabelStyle = LabelStyle.Create(TruncatedLabels = false, IsStaggered = false))
         .WithLegend(Enabled = true, Docking = Docking.Right, Alignment = Drawing.StringAlignment.Center)
         .ShowChart()
+
+    ()
 
 let runBinaryBenchmark () =
     printfn "------- Binary Serializers --------"

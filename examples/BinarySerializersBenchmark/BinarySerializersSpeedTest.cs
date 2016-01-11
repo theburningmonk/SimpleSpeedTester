@@ -503,7 +503,7 @@ namespace SimpleSpeedTester.Example
 
         private static List<T> DeserializeWithFsPickler<T>(List<byte[]> payloads)
         {
-            var fsp = FsPickler.CreateBinary();
+            var fsp = FsPickler.CreateBinarySerializer();
 
             return
                 payloads.Select(payload =>
@@ -517,7 +517,7 @@ namespace SimpleSpeedTester.Example
 
         private static List<byte[]> SerializeWithFsPickler<T>(List<T> objects)
         {
-            var fsp = FsPickler.CreateBinary();
+            var fsp = FsPickler.CreateBinarySerializer();
 
             return
                 objects.Select(o =>

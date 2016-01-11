@@ -14,7 +14,6 @@ using SimpleSpeedTester.Core;
 using SimpleSpeedTester.Core.OutcomeFilters;
 using SimpleSpeedTester.Interfaces;
 using JayrockJsonConvert = Jayrock.Json.Conversion.JsonConvert;
-using JsonNetJsonConvert = Newtonsoft.Json.JsonConvert;
 using JsonNetJsonSerializer = Newtonsoft.Json.JsonSerializer;
 using JsonNetBsonReader = Newtonsoft.Json.Bson.BsonReader;
 using JsonNetBsonWriter = Newtonsoft.Json.Bson.BsonWriter;
@@ -624,7 +623,7 @@ namespace SimpleSpeedTester.Example
 
         private static List<string> SerializeWithFsPickler(List<SimpleObject> objects)
         {
-            var json = FsPickler.CreateJson();
+            var json = FsPickler.CreateJsonSerializer();
             return objects
                     .Select(obj => json.PickleToString(obj))
                     .ToList();
@@ -632,7 +631,7 @@ namespace SimpleSpeedTester.Example
 
         private static List<SimpleObject> DeserializeWithFsPickler(List<string> arg)
         {
-            var json = FsPickler.CreateJson();
+            var json = FsPickler.CreateJsonSerializer();
             return arg
                     .Select(j => json.UnPickleOfString<SimpleObject>(j))
                     .ToList();

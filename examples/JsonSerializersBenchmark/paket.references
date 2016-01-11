@@ -1,0 +1,12 @@
+group Json
+fastJSON
+FsPickler.json
+jayrock-json
+jil
+JsonFx
+MongoDB.Bson
+NetJson
+Newtonsoft.json
+ServiceStack.Text
+System.Json
+System.Text.Json

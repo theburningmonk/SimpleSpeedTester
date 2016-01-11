@@ -11,17 +11,19 @@ namespace SimpleSpeedTester.Tests
     public class TestGroupTest : BaseTest
     {
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void TestNullTestGroupName()
         {
-            new TestGroup(null);
+            Assert.That(
+                () => new TestGroup(null),
+                Throws.ArgumentException);
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void TestEmptyTestGroupName()
         {
-            new TestGroup(string.Empty);
+            Assert.That(
+                () => new TestGroup(string.Empty),
+                Throws.ArgumentException);
         }
 
         [Test]

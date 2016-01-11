@@ -8,38 +8,43 @@ namespace SimpleSpeedTester.Tests
     public class TestActionTest : BaseTest
     {
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void TestNullActionName()
         {
-            new Test(null, DoNothingAction, 1, GetTestGroup());
+            Assert.That(
+                () => new Test(null, DoNothingAction, 1, GetTestGroup()),
+                Throws.ArgumentException);
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException))]
         public void TestEmptyActionName()
         {
-            new Test(string.Empty, DoNothingAction, 1, GetTestGroup());
+            Assert.That(
+                () => new Test(string.Empty, DoNothingAction, 1, GetTestGroup()),
+                Throws.ArgumentException);
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void TestNullActionDelegate()
         {
-            new Test(TestName, null, 1, GetTestGroup());
+            Assert.That(
+                () => new Test(TestName, null, 1, GetTestGroup()),
+                Throws.ArgumentNullException);
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void TestInvalidExecCount()
         {
-            new Test(TestName, DoNothingAction, 0, GetTestGroup());
+            Assert.That(
+                () => new Test(TestName, DoNothingAction, 0, GetTestGroup()),
+                Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void TestNullTestGroup()
         {
-            new Test(TestName, DoNothingAction, 1, null);
+            Assert.That(
+                () => new Test(TestName, DoNothingAction, 1, null),
+                Throws.ArgumentNullException);
         }
 
         [Test]

@@ -11,17 +11,19 @@ namespace SimpleSpeedTester.Tests
     public class TestResultTest : BaseTest
     {
         [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void TestNullTestAction()
         {
-            new TestResult(null, new List<TestOutcome>());
+            Assert.That(
+                () => new TestResult(null, new List<TestOutcome>()),
+                Throws.ArgumentNullException);
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void TestNullTestActionOutcomes()
         {
-            new TestResult(GetTest(DoNothingAction, 1), null);
+            Assert.That(
+                () => new TestResult(GetTest(DoNothingAction, 1), null),
+                Throws.ArgumentNullException);
         }
 
         [Test]

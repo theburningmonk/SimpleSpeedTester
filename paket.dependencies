@@ -1,0 +1,36 @@
+source https://www.nuget.org/api/v2
+nuget FSharp.Charting
+
+group Tests
+source https://www.nuget.org/api/v2
+
+nuget NUnit
+
+group Json
+source https://www.nuget.org/api/v2
+
+nuget fastJSON
+nuget FsPickler.json
+nuget jayrock-json
+nuget jil
+nuget JsonFx
+nuget MongoDB.Bson
+nuget NetJson
+nuget Newtonsoft.json
+nuget ServiceStack.Text 4.0.40
+nuget System.Json
+nuget System.Text.Json
+
+group Binary
+source https://www.nuget.org/api/v2
+
+nuget Filbert
+nuget fluorinefx
+nuget fsPickler
+nuget MsgPack
+nuget protobuf-net
+
+group Collections
+source https://www.nuget.org/api/v2
+
+nuget Microsoft.Bcl.Immutable
