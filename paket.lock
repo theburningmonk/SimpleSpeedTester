@@ -2,11 +2,18 @@ NUGET
   remote: https://www.nuget.org/api/v2
   specs:
     Aether (8.0.2)
+    Bond.Core.CSharp (4.0.2)
+    Bond.CSharp (4.0.2)
+      Bond.Runtime.CSharp (4.0.2)
+    Bond.Runtime.CSharp (4.0.2)
+      Bond.Core.CSharp (4.0.2)
+      Newtonsoft.Json (>= 7.0.1)
     Chiron (6.0.1)
       Aether (>= 8.0.2 < 9.0.0)
       FParsec (>= 1.0.0 < 2.0.0)
     FParsec (1.0.2)
     FSharp.Charting (0.90.13)
+    Newtonsoft.Json (8.0.2)
 
 GROUP Binary
 NUGET

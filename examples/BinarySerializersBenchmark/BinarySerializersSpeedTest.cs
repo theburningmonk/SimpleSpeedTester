@@ -19,6 +19,10 @@ using JsonNetBsonReader = Newtonsoft.Json.Bson.BsonReader;
 using JsonNetBsonWriter = Newtonsoft.Json.Bson.BsonWriter;
 using JsonNetJsonSerializer = Newtonsoft.Json.JsonSerializer;
 
+using Bond;
+using Bond.Protocols;
+using Bond.IO.Safe;
+
 namespace SimpleSpeedTester.Example
 {
     using Filbert.Core;
@@ -36,6 +40,7 @@ namespace SimpleSpeedTester.Example
 
         // the objects to perform the tests with
         private static readonly List<SimpleObject> SimpleObjects = Enumerable.Range(1, ObjectsCount).Select(GetSimpleObject).ToList();
+        private static readonly List<SimpleBondObject> SimpleBondObjects = Enumerable.Range(1, ObjectsCount).Select(GetSimpleBondObject).ToList();
         private static readonly List<TestRecords.SimpleRecord> SimpleRecords = Enumerable.Range(1, ObjectsCount).Select(GetSimpleRecord).ToList();
         private static readonly List<Bert> BertSimpleObjects = Enumerable.Range(1, ObjectsCount).Select(GetSimpleObjectBert).ToList();
         private static readonly List<SimpleObjectWithFields> SimpleObjectsWithFields = Enumerable.Range(1, ObjectsCount).Select(GetSimpleObjectWithFields).ToList();
@@ -46,62 +51,70 @@ namespace SimpleSpeedTester.Example
             var results = new Dictionary<string, Tuple<ITestResultSummary, ITestResultSummary, double>>();
 
             results.Add(
+                "Bond v4.0.2",
+                DoSpeedTest(
+                    "Bond",
+                    SimpleBondObjects,
+                    SerializeWithBond,
+                    DeserializeWithBond<SimpleBondObject>));
+
+            results.Add(
                 "BinaryFormatter (properties)",
                 DoSpeedTest(
-                    "BinaryFormatter (with properties)", 
-                    SimpleObjects, 
-                    SerializeWithBinaryFormatter, 
+                    "BinaryFormatter (with properties)",
+                    SimpleObjects,
+                    SerializeWithBinaryFormatter,
                     DeserializeWithBinaryFormatter<SimpleObject>));
 
             results.Add(
                 "BinaryFormatter (fields)",
                 DoSpeedTest(
-                    "BinaryFormatter (with fields)", 
-                    SimpleObjectsWithFields, 
-                    SerializeWithBinaryFormatter, 
+                    "BinaryFormatter (with fields)",
+                    SimpleObjectsWithFields,
+                    SerializeWithBinaryFormatter,
                     DeserializeWithBinaryFormatter<SimpleObjectWithFields>));
 
             // speed test binary formatter when used with an ISerializable type            
             results.Add(
                 "BinaryFormatter (ISerializable)",
                 DoSpeedTest(
-                    "BinaryFormatter (with ISerializable)", 
-                    IserializableSimpleObjects, 
-                    SerializeWithBinaryFormatter, 
+                    "BinaryFormatter (with ISerializable)",
+                    IserializableSimpleObjects,
+                    SerializeWithBinaryFormatter,
                     DeserializeWithBinaryFormatter<IserializableSimpleObject>));
 
             results.Add(
                 "Protobuf-Net (properties) v2.0.0.668",
                 DoSpeedTest(
-                    "Protobuf-Net (with properties)", 
-                    SimpleObjects, 
-                    SerializeWithProtobufNet, 
+                    "Protobuf-Net (with properties)",
+                    SimpleObjects,
+                    SerializeWithProtobufNet,
                     DeserializeWithProtobufNet<SimpleObject>));
 
             results.Add(
                 "Protobuf-Net (fields) v2.0.0.668",
                 DoSpeedTest(
-                    "Protobuf-Net (with fields)", 
-                    SimpleObjectsWithFields, 
-                    SerializeWithProtobufNet, 
+                    "Protobuf-Net (with fields)",
+                    SimpleObjectsWithFields,
+                    SerializeWithProtobufNet,
                     DeserializeWithProtobufNet<SimpleObjectWithFields>));
 
             // speed test binary writer (only for reference, won't be able to deserialize)
             results.Add(
                 "BinaryWriter",
                 DoSpeedTest(
-                    "BinaryWriter", 
-                    SimpleObjects, 
-                    SerializeWithBinaryWriter, 
+                    "BinaryWriter",
+                    SimpleObjects,
+                    SerializeWithBinaryWriter,
                     DeserializeWithBinaryReader,
                     ignoreDeserializationResult: true));
 
             results.Add(
                 "FsPickler (F# records) v1.7.1",
                 DoSpeedTest(
-                    "FsPickler", 
-                    SimpleRecords, 
-                    SerializeWithFsPickler, 
+                    "FsPickler",
+                    SimpleRecords,
+                    SerializeWithFsPickler,
                     DeserializeWithFsPickler<TestRecords.SimpleRecord>));
 
             results.Add(
@@ -123,42 +136,42 @@ namespace SimpleSpeedTester.Example
             results.Add(
                 "MessageShark (properties)",
                 DoSpeedTest(
-                    "MessageShark (with properties)", 
-                    SimpleObjects, 
-                    SerializeWithMessageShark, 
+                    "MessageShark (with properties)",
+                    SimpleObjects,
+                    SerializeWithMessageShark,
                     DeserializeWithMessageShark<SimpleObject>));
 
             results.Add(
                 "FluorineFx v1.2.4",
                 DoSpeedTest(
-                    "FluorineFx", 
-                    SimpleObjects, 
-                    SerializeWithFluorineFx, 
+                    "FluorineFx",
+                    SimpleObjects,
+                    SerializeWithFluorineFx,
                     DeserializeWithFluorineFx<SimpleObject>));
 
             results.Add(
                 "Filbert v0.2.0",
                 DoSpeedTest(
-                    "Filbert", 
-                    BertSimpleObjects, 
-                    SerializeWithFilbert, 
+                    "Filbert",
+                    BertSimpleObjects,
+                    SerializeWithFilbert,
                     DeserializeWithFilbert));
 
             results.Add(
                 "Json.Net BSON v8.0.2",
                 DoSpeedTest(
-                    "Json.Net BSON", 
-                    SimpleObjects, 
-                    SerializeWithJsonNetBson, 
+                    "Json.Net BSON",
+                    SimpleObjects,
+                    SerializeWithJsonNetBson,
                     DeserializeWithJsonNetBson<SimpleObject>));
 
             return results;
         }
 
         private static Tuple<ITestResultSummary, ITestResultSummary, double> DoSpeedTest<T>(
-            string testGroupName, 
-            List<T> objects, 
-            Func<List<T>, List<byte[]>> serializeFunc, 
+            string testGroupName,
+            List<T> objects,
+            Func<List<T>, List<byte[]>> serializeFunc,
             Func<List<byte[]>, List<T>> deserializeFunc,
             bool ignoreSerializationResult = false,
             bool ignoreDeserializationResult = false)
@@ -171,7 +184,7 @@ namespace SimpleSpeedTester.Example
                 testGroup
                     .Plan("Serialization", () => byteArrays = serializeFunc(objects), TestRuns)
                     .GetResult()
-                    .GetSummary(OutcomeFilter);            
+                    .GetSummary(OutcomeFilter);
 
             Console.WriteLine(serializationTestSummary);
 
@@ -195,8 +208,8 @@ namespace SimpleSpeedTester.Example
             Console.WriteLine("--------------------------------------------------------\n\n");
 
             return Tuple.Create(
-                ignoreSerializationResult ? null : serializationTestSummary, 
-                ignoreDeserializationResult ? null : deserializationTestSummary, 
+                ignoreSerializationResult ? null : serializationTestSummary,
+                ignoreDeserializationResult ? null : deserializationTestSummary,
                 avgPayload);
         }
 
@@ -207,19 +220,30 @@ namespace SimpleSpeedTester.Example
                 Bert.NewTuple(new[] { Bert.NewAtom("Name"), Bert.NewAtom("Simple") }),
                 Bert.NewTuple(new[] { Bert.NewAtom("Id"), Bert.NewInteger(100000) }),
                 Bert.NewTuple(new[] { Bert.NewAtom("Address"), Bert.NewByteList(System.Text.Encoding.ASCII.GetBytes("Planet Earth")) }),
-                Bert.NewTuple(new[] { Bert.NewAtom("Scores"), Bert.NewList(Enumerable.Range(0, 10).Select(Bert.NewInteger).ToArray()) })                
+                Bert.NewTuple(new[] { Bert.NewAtom("Scores"), Bert.NewList(Enumerable.Range(0, 10).Select(Bert.NewInteger).ToArray()) })
             });
         }
 
         private static SimpleObject GetSimpleObject(int id)
         {
             return new SimpleObject
-                       {
-                           Name = "Simple",
-                           Id = 100000,
-                           Address = "Planet Earth",
-                           Scores = Enumerable.Range(0, 10).ToArray()
-                       };
+            {
+                Name = "Simple",
+                Id = 100000,
+                Address = "Planet Earth",
+                Scores = Enumerable.Range(0, 10).ToArray()
+            };
+        }
+
+        private static SimpleBondObject GetSimpleBondObject(int id)
+        {
+            return new SimpleBondObject
+            {
+                Name = "Simple",
+                Id = 100000,
+                Address = "Planet Earth",
+                Scores = Enumerable.Range(0, 10).ToList()
+            };
         }
 
         private static TestRecords.SimpleRecord GetSimpleRecord(int id)
@@ -241,12 +265,12 @@ namespace SimpleSpeedTester.Example
         private static IserializableSimpleObject GetSerializableSimpleObject(int id)
         {
             return new IserializableSimpleObject
-                       {
-                           Name = "Simple",
-                           Id = 100000,
-                           Address = "Planet Earth",
-                           Scores = Enumerable.Range(0, 10).ToArray()
-                       };
+            {
+                Name = "Simple",
+                Id = 100000,
+                Address = "Planet Earth",
+                Scores = Enumerable.Range(0, 10).ToArray()
+            };
         }
 
         #region Binary Formatter
@@ -281,7 +305,38 @@ namespace SimpleSpeedTester.Example
         }
 
         #endregion
-        
+
+        #region Bond
+
+        private static List<byte[]> SerializeWithBond<T>(List<T> objects)
+        {
+            return objects.Select(SerializeWithBond).ToList();
+        }
+
+        private static byte[] SerializeWithBond<T>(T obj)
+        {
+            var output = new OutputBuffer();
+            var writer = new CompactBinaryWriter<OutputBuffer>(output);
+
+            Serialize.To(writer, obj);
+            return output.Data.ToArray();
+        }
+
+        private static List<T> DeserializeWithBond<T>(List<byte[]> byteArrays)
+        {
+            return byteArrays.Select(arr => DeserializeWithBond<T>(arr)).ToList();
+        }
+
+        private static T DeserializeWithBond<T>(byte[] byteArray)
+        {
+            var input = new InputBuffer(byteArray);
+            var reader = new CompactBinaryReader<InputBuffer>(input);
+
+            return Deserialize<T>.From(reader);
+        }
+
+        #endregion
+
         #region Protobuf-Net
 
         private static List<byte[]> SerializeWithProtobufNet<T>(List<T> objects)
@@ -311,8 +366,8 @@ namespace SimpleSpeedTester.Example
             }
         }
 
-        #endregion        
-        
+        #endregion
+
         #region Binary Writer
 
         private static int[] ReadScores(BinaryReader reader)
@@ -373,7 +428,7 @@ namespace SimpleSpeedTester.Example
             return objects.Select(packer.Pack).ToList();
         }
 
-        private static List<T> DeserializeWithMessagePack<T>(List<byte[]> byteArrays, bool allFields) 
+        private static List<T> DeserializeWithMessagePack<T>(List<byte[]> byteArrays, bool allFields)
         {
             var packer = new CompiledPacker(allFields);
             return byteArrays.Select(packer.Unpack<T>).ToList();
@@ -400,7 +455,7 @@ namespace SimpleSpeedTester.Example
         #region FluorineFX
 
         private static List<byte[]> SerializeWithFluorineFx<T>(List<T> objects)
-            where T : class 
+            where T : class
         {
             return objects.Select(SerializeWithFluorineFx).ToList();
         }
@@ -572,7 +627,7 @@ namespace SimpleSpeedTester.Example
         public class IserializableSimpleObject : ISerializable
         {
             public IserializableSimpleObject()
-            {                
+            {
             }
 
             // this constructor is used for deserialization
@@ -599,6 +654,53 @@ namespace SimpleSpeedTester.Example
                 info.AddValue("Name", Name);
                 info.AddValue("Address", Address);
                 info.AddValue("Scores", Scores);
+            }
+        }
+
+        //------------------------------------------------------------------------------
+        // This code was generated by a tool.
+        //
+        //   Tool : Bond Compiler 0.4.0.1
+        //   File : test_types.cs
+        //
+        // Changes to this file may cause incorrect behavior and will be lost when
+        // the code is regenerated.
+        // <auto-generated />
+        //------------------------------------------------------------------------------
+
+        #region ReSharper warnings
+        // ReSharper disable PartialTypeWithSinglePart
+        // ReSharper disable RedundantNameQualifier
+        // ReSharper disable InconsistentNaming
+        // ReSharper disable CheckNamespace
+        // ReSharper disable UnusedParameter.Local
+        // ReSharper disable RedundantUsingDirective
+        #endregion
+
+        [global::Bond.Schema]
+        [System.CodeDom.Compiler.GeneratedCode("gbc", "0.4.0.1")]
+        public partial class SimpleBondObject
+        {
+            [global::Bond.Id(0)]
+            public int Id { get; set; }
+
+            [global::Bond.Id(1)]
+            public string Name { get; set; }
+
+            [global::Bond.Id(2)]
+            public string Address { get; set; }
+
+            [global::Bond.Id(3)]
+            public List<int> Scores { get; set; }
+
+            public SimpleBondObject() 
+                : this("SimpleSpeedTester.Example.SimpleBondObject", "SimpleBondObject") { }
+
+            protected SimpleBondObject(string fullName, string name)
+            {
+                Name = "";
+                Address = "";
+                Scores = new List<int>();
             }
         }
 
