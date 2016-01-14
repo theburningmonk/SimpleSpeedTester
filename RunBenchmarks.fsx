@@ -1,11 +1,13 @@
 ﻿#I "examples/BinarySerializersBenchmark/bin"
 #I "examples/JsonSerializersBenchmark/bin"
+#I "examples/JsonSerializersBenchmarkFs/bin"
 #I "examples/CollectionBenchmark/bin"
 #load "packages/FSharp.Charting/FSharp.Charting.fsx"
 
 #r "SimpleSpeedTester.dll"
 #r "BinarySerializersBenchmark.dll"
 #r "JsonSerializersBenchmark.dll"
+#r "JsonSerializersBenchmarkFs.dll"
 #r "CollectionBenchmark.dll"
 
 open System
@@ -77,8 +79,13 @@ let prettyPrint (results : Dictionary<string, ITestResultSummary * ITestResultSu
                    LabelStyle = LabelStyle.Create(TruncatedLabels = false, IsStaggered = false))
         .WithLegend(Enabled = true, Docking = Docking.Right, Alignment = Drawing.StringAlignment.Center)
         .ShowChart()
+    |> ignore
 
-    ()
+let merge (resultL : Dictionary<string, 'a>) (resultR : Dictionary<string, 'a>) =
+    for KeyValue(k, res) in resultR do
+        resultL.[k] <- res
+        
+    resultL  
 
 let runBinaryBenchmark () =
     printfn "------- Binary Serializers --------"
@@ -94,9 +101,10 @@ let runJsonBenchmark () =
     printfn "Running Benchmarks...\n\n\n\n\n"
 
     let results = JsonSerializersSpeedTest.Run()
+    let results' = FSharpOnlyJsonSerializers.run()
 
     printfn "all done."
-    prettyPrint results
+    prettyPrint (merge results results')
 
 let runListBenchmark () =
     printfn "------- Lists --------"

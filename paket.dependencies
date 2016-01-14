@@ -1,4 +1,5 @@
 source https://www.nuget.org/api/v2
+nuget Chiron
 nuget FSharp.Charting
 
 group Tests
@@ -9,6 +10,7 @@ nuget NUnit
 group Json
 source https://www.nuget.org/api/v2
 
+nuget Chiron
 nuget fastJSON
 nuget FsPickler.json
 nuget jayrock-json

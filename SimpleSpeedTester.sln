@@ -35,6 +35,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{B63C2F
 		paket.lock = paket.lock
 	EndProjectSection
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "JsonSerializersBenchmarkFs", "Examples\JsonSerializersBenchmarkFs\JsonSerializersBenchmarkFs.fsproj", "{4337FEE0-9C52-48B4-B232-5B9BC89556FA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -115,6 +117,18 @@ Global
 		{088C6FFB-7156-4172-96D8-32111C602067}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{088C6FFB-7156-4172-96D8-32111C602067}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{088C6FFB-7156-4172-96D8-32111C602067}.Release|x86.ActiveCfg = Release|Any CPU
+		{4337FEE0-9C52-48B4-B232-5B9BC89556FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4337FEE0-9C52-48B4-B232-5B9BC89556FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4337FEE0-9C52-48B4-B232-5B9BC89556FA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{4337FEE0-9C52-48B4-B232-5B9BC89556FA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{4337FEE0-9C52-48B4-B232-5B9BC89556FA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4337FEE0-9C52-48B4-B232-5B9BC89556FA}.Debug|x86.Build.0 = Debug|Any CPU
+		{4337FEE0-9C52-48B4-B232-5B9BC89556FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4337FEE0-9C52-48B4-B232-5B9BC89556FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4337FEE0-9C52-48B4-B232-5B9BC89556FA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{4337FEE0-9C52-48B4-B232-5B9BC89556FA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{4337FEE0-9C52-48B4-B232-5B9BC89556FA}.Release|x86.ActiveCfg = Release|Any CPU
+		{4337FEE0-9C52-48B4-B232-5B9BC89556FA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -125,5 +139,6 @@ Global
 		{564AA4F6-333F-41D2-B924-A07B3D449BDC} = {F891B8A3-232F-4736-9CF7-1C1D2BDCB6F8}
 		{65E36753-C531-417C-AA59-B99D10E68EE3} = {F891B8A3-232F-4736-9CF7-1C1D2BDCB6F8}
 		{94F57EB2-21B7-42B3-A885-B2DE5EE74A10} = {F891B8A3-232F-4736-9CF7-1C1D2BDCB6F8}
+		{4337FEE0-9C52-48B4-B232-5B9BC89556FA} = {F891B8A3-232F-4736-9CF7-1C1D2BDCB6F8}
 	EndGlobalSection
 EndGlobal

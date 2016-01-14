@@ -1,6 +1,11 @@
 NUGET
   remote: https://www.nuget.org/api/v2
   specs:
+    Aether (8.0.2)
+    Chiron (6.0.1)
+      Aether (>= 8.0.2 < 9.0.0)
+      FParsec (>= 1.0.0 < 2.0.0)
+    FParsec (1.0.2)
     FSharp.Charting (0.90.13)
 
 GROUP Binary
@@ -25,7 +30,12 @@ GROUP Json
 NUGET
   remote: https://www.nuget.org/api/v2
   specs:
+    Aether (8.0.2)
+    Chiron (6.0.1)
+      Aether (>= 8.0.2 < 9.0.0)
+      FParsec (>= 1.0.0 < 2.0.0)
     fastJSON (2.1.14)
+    FParsec (1.0.2)
     FsPickler (1.7.1)
     FsPickler.Json (1.7.1)
       FsPickler (1.7.1)
