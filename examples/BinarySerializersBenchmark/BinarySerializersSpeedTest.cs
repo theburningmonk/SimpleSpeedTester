@@ -315,7 +315,7 @@ namespace SimpleSpeedTester.Example
 
         private static byte[] SerializeWithBond<T>(T obj)
         {
-            var output = new OutputBuffer();
+            var output = new OutputBuffer(256);
             var writer = new CompactBinaryWriter<OutputBuffer>(output);
 
             Serialize.To(writer, obj);
