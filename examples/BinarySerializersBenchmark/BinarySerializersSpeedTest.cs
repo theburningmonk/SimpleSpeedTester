@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-
+using System.Text;
 using MessageShark;
 
 using MsgPack;
@@ -57,6 +57,14 @@ namespace SimpleSpeedTester.Example
                     SimpleBondObjects,
                     SerializeWithBond,
                     DeserializeWithBond<SimpleBondObject>));
+
+            results.Add(
+                "HandCoded",
+                DoSpeedTest(
+                    "HandCoded",
+                    SimpleObjects,
+                    HandCodedSerialize,
+                    HandCodedDeserialize));
 
             results.Add(
                 "BinaryFormatter (properties)",
@@ -336,6 +344,104 @@ namespace SimpleSpeedTester.Example
         }
 
         #endregion
+
+        #region Hand Coded
+
+        private static List<SimpleObject> HandCodedDeserialize(List<byte[]> payloads)
+        {
+            return
+                payloads.Select(bytes =>
+                {
+                    var index = 0;
+                    var result = new SimpleObject();
+
+                    result.Id = ReadInt32(bytes, ref index);
+
+                    var len = ReadInt32(bytes, ref index);
+                    result.Name = Encoding.UTF8.GetString(bytes, index, len);
+                    index += len;
+
+                    len = ReadInt32(bytes, ref index);
+                    result.Address = Encoding.UTF8.GetString(bytes, index, len);
+                    index += len;
+
+                    len = ReadInt32(bytes, ref index);
+                    result.Scores = new int[len];
+
+                    for (var i = 0; i < len; i++)
+                    {
+                        result.Scores[i] = ReadInt32(bytes, ref index);
+                    }
+
+                    return result;
+                }).ToList();
+        }
+
+        private static List<byte[]> HandCodedSerialize(List<SimpleObject> objects)
+        {
+            return objects.Select(HandCodedSerialize).ToList();
+        }
+
+        private const int Flag = 0x80;
+        private const int Bits = 0x7F;
+
+        private static void WriteInt32(MemoryStream stream, int value)
+        {
+            var b = Bits & value;
+            value >>= 7;
+
+            while (value != 0)
+            {
+                stream.WriteByte((byte)b);
+
+                b = (byte)(Bits & value);
+                value >>= 7;
+            }
+
+            stream.WriteByte((byte)(Flag | b));
+        }
+
+        private static int ReadInt32(byte[] bytes, ref int index)
+        {
+            var b = bytes[index++];
+            var result = b & Bits;
+            var shift = 7;
+
+            while (b < 128)
+            {
+                b = bytes[index++];
+                result = ((b & Bits) << shift) | result;
+                shift += 7;
+            }
+
+            return result;
+        }
+
+        private static byte[] HandCodedSerialize(SimpleObject obj)
+        {
+            using (var ms = new MemoryStream())
+            {
+                WriteInt32(ms, obj.Id);
+
+                var bytes = Encoding.UTF8.GetBytes(obj.Name);
+                WriteInt32(ms, bytes.Length);
+                ms.Write(bytes, 0, bytes.Length);
+
+                bytes = Encoding.UTF8.GetBytes(obj.Address);
+                WriteInt32(ms, bytes.Length);
+                ms.Write(bytes, 0, bytes.Length);
+
+                WriteInt32(ms, obj.Scores.Length);
+                for (var i = 0; i < obj.Scores.Length; i++)
+                {
+                    WriteInt32(ms, obj.Scores[i]);
+                }
+
+                return ms.ToArray();
+            }
+        }
+
+        #endregion      
 
         #region Protobuf-Net
 
