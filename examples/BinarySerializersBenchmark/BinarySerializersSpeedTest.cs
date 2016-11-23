@@ -9,7 +9,7 @@ using MessageShark;
 
 using MsgPack;
 
-using Nessos.FsPickler;
+using MBrace.FsPickler;
 
 using SimpleSpeedTester.Core;
 using SimpleSpeedTester.Core.OutcomeFilters;
@@ -26,6 +26,7 @@ using Bond.IO.Safe;
 namespace SimpleSpeedTester.Example
 {
     using Filbert.Core;
+    using ZeroFormatter;
 
     public static class BinarySerializersSpeedTest
     {
@@ -44,6 +45,7 @@ namespace SimpleSpeedTester.Example
         private static readonly List<TestRecords.SimpleRecord> SimpleRecords = Enumerable.Range(1, ObjectsCount).Select(GetSimpleRecord).ToList();
         private static readonly List<Bert> BertSimpleObjects = Enumerable.Range(1, ObjectsCount).Select(GetSimpleObjectBert).ToList();
         private static readonly List<SimpleObjectWithFields> SimpleObjectsWithFields = Enumerable.Range(1, ObjectsCount).Select(GetSimpleObjectWithFields).ToList();
+        private static readonly List<SimpleObjectWithFieldsStruct> SimpleObjectsWithFieldsStruct = Enumerable.Range(1, ObjectsCount).Select(GetSimpleObjectWithFieldsStruct).ToList();
         private static readonly List<IserializableSimpleObject> IserializableSimpleObjects = Enumerable.Range(1, ObjectsCount).Select(GetSerializableSimpleObject).ToList();
 
         public static Dictionary<string, Tuple<ITestResultSummary, ITestResultSummary, double>> Run()
@@ -106,6 +108,22 @@ namespace SimpleSpeedTester.Example
                     SimpleObjectsWithFields,
                     SerializeWithProtobufNet,
                     DeserializeWithProtobufNet<SimpleObjectWithFields>));
+
+            results.Add(
+                "ZeroFormatter(properties)",
+                DoSpeedTest(
+                    "ZeroFormatter (with properties)",
+                    SimpleObjects,
+                    SerializeWithZeroFormatter,
+                    DeserializeWithZeroFormatter<SimpleObject>));
+
+            results.Add(
+                "ZeroFormatter (fields, struct)",
+                DoSpeedTest(
+                    "ZeroFormatter (with fields, struct)",
+                    SimpleObjectsWithFieldsStruct,
+                    SerializeWithZeroFormatter,
+                    DeserializeWithZeroFormatter<SimpleObjectWithFieldsStruct>));
 
             // speed test binary writer (only for reference, won't be able to deserialize)
             results.Add(
@@ -262,6 +280,17 @@ namespace SimpleSpeedTester.Example
         private static SimpleObjectWithFields GetSimpleObjectWithFields(int id)
         {
             return new SimpleObjectWithFields
+            {
+                Name = "Simple",
+                Id = 100000,
+                Address = "Planet Earth",
+                Scores = Enumerable.Range(0, 10).ToArray()
+            };
+        }
+
+        private static SimpleObjectWithFieldsStruct GetSimpleObjectWithFieldsStruct(int id)
+        {
+            return new SimpleObjectWithFieldsStruct
             {
                 Name = "Simple",
                 Id = 100000,
@@ -470,6 +499,30 @@ namespace SimpleSpeedTester.Example
             {
                 return ProtoBuf.Serializer.Deserialize<T>(memStream);
             }
+        }
+
+        #endregion
+
+        #region ZeroFormatter
+
+        private static List<byte[]> SerializeWithZeroFormatter<T>(List<T> objects)
+        {
+            return objects.Select(SerializeWithZeroFormatter).ToList();
+        }
+
+        private static byte[] SerializeWithZeroFormatter<T>(T obj)
+        {
+            return ZeroFormatterSerializer.Serialize(obj);
+        }
+
+        private static List<T> DeserializeWithZeroFormatter<T>(List<byte[]> byteArrays)
+        {
+            return byteArrays.Select(DeserializeWithZeroFormatter<T>).ToList();
+        }
+
+        private static T DeserializeWithZeroFormatter<T>(byte[] byteArray)
+        {
+            return ZeroFormatterSerializer.Deserialize<T>(byteArray);
         }
 
         #endregion
@@ -712,21 +765,49 @@ namespace SimpleSpeedTester.Example
             public int[] Scores;
         }
 
+        [ZeroFormattable]
+        public struct SimpleObjectWithFieldsStruct
+        {
+            [Index(0)]
+            public int Id;
+            [Index(1)]
+            public string Name;
+
+            [Index(2)]
+            public string Address;
+
+            [Index(3)]
+            public int[] Scores;
+
+            public SimpleObjectWithFieldsStruct(int id, string name, string address, int[] scores)
+            {
+                this.Id = id;
+                this.Name = name;
+                this.Address = address;
+                this.Scores = scores;
+            }
+        }
+
         [Serializable]
         [DataContract]
+        [ZeroFormattable]
         public class SimpleObject
         {
             [DataMember(Order = 1)]
-            public int Id { get; set; }
+            [Index(0)]
+            public virtual int Id { get; set; }
 
             [DataMember(Order = 2)]
-            public string Name { get; set; }
+            [Index(1)]
+            public virtual string Name { get; set; }
 
             [DataMember(Order = 3)]
-            public string Address { get; set; }
+            [Index(2)]
+            public virtual string Address { get; set; }
 
             [DataMember(Order = 4)]
-            public int[] Scores { get; set; }
+            [Index(3)]
+            public virtual int[] Scores { get; set; }
         }
 
         [Serializable]
@@ -799,7 +880,7 @@ namespace SimpleSpeedTester.Example
             [global::Bond.Id(3)]
             public List<int> Scores { get; set; }
 
-            public SimpleBondObject() 
+            public SimpleBondObject()
                 : this("SimpleSpeedTester.Example.SimpleBondObject", "SimpleBondObject") { }
 
             protected SimpleBondObject(string fullName, string name)

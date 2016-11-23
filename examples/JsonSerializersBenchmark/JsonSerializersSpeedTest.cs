@@ -20,7 +20,7 @@ using JsonNetBsonWriter = Newtonsoft.Json.Bson.BsonWriter;
 using JsonFxReader = JsonFx.Json.JsonReader;
 using JsonFxWriter = JsonFx.Json.JsonWriter;
 using SystemTextJson = System.Text.Json;
-using Nessos.FsPickler.Json;
+using MBrace.FsPickler.Json;
 using Newtonsoft.Json;
 
 namespace SimpleSpeedTester.Example

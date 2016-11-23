@@ -2,6 +2,7 @@ source https://www.nuget.org/api/v2
 nuget Bond.CSharp
 nuget Chiron
 nuget FSharp.Charting
+nuget FAKE
 
 group Tests
 source https://www.nuget.org/api/v2
@@ -32,6 +33,7 @@ nuget fluorinefx
 nuget fsPickler
 nuget MsgPack
 nuget protobuf-net
+nuget ZeroFormatter
 
 group Collections
 source https://www.nuget.org/api/v2
