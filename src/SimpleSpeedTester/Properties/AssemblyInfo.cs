@@ -10,6 +10,11 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleToAttribute("SimpleSpeedTester.Tests")]
 namespace System {
     internal static class AssemblyVersionInformation {
-        internal const string Version = "1.1.0";
+        internal const System.String AssemblyTitle = "SimpleSpeedTester";
+        internal const System.String AssemblyProduct = "SimpleSpeedTester";
+        internal const System.String AssemblyDescription = "A simple framework to help benchmark test your .Net code.";
+        internal const System.String AssemblyVersion = "1.1.0";
+        internal const System.String AssemblyFileVersion = "1.1.0";
+        internal const System.String InternalsVisibleTo = "SimpleSpeedTester.Tests";
     }
 }
